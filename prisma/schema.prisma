@@ -11,8 +11,16 @@ datasource db {
 }
 
 model Item {
-  id String @id @default(cuid())
-  title String
+  id          String @id @default(cuid())
+  title       String
   description String
-  authorId String
+  authorId    String
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  String
+}
+
+model Category {
+  id          String @id @default(cuid())
+  name        String
+  items       Item[]
 }
