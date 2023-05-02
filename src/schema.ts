@@ -13,5 +13,11 @@ export const itemSchema = z
         message: "Description must be less than 2000 characters long",
       }),
     categoryId: z.string().min(1, { message: "Category is required" }),
+    imageURL: z.string().min(1, { message: "Image is required" }),
+    price: z
+      .number({
+        required_error: "Price is required",
+      })
+      .min(0, "Price must be positive"),
   })
   .strict();
