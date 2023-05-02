@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { procedure, protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
+import { itemSchema } from "@/schema";
 
 export const itemsRouter = router({
   getAll: procedure.query(async ({ ctx }) => {
@@ -20,13 +21,7 @@ export const itemsRouter = router({
     }),
 
   create: protectedProcedure
-    .input(
-      z.object({
-        title: z.string().min(2).max(50),
-        description: z.string().min(2).max(2000),
-        categoryId: z.string(),
-      })
-    )
+    .input(itemSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.prisma.item.create({
         data: {
