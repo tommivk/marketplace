@@ -9,6 +9,15 @@ export const categoriesRouter = router({
     return categories;
   }),
 
+  getItemCount: procedure
+    .input(z.object({ categoryId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const itemCount = await ctx.prisma.item.count({
+        where: { categoryId: input.categoryId },
+      });
+      return itemCount;
+    }),
+
   //    TODO add admin validation
   create: procedure
     .input(z.object({ name: z.string() }))
