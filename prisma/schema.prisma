@@ -26,5 +26,7 @@ model Item {
 model Category {
   id          String @id @default(cuid())
   name        String
+  imageURL    String
+  createdAt   DateTime @default(now())
   items       Item[]
 }
