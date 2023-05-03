@@ -17,7 +17,7 @@ const ItemPage: NextPage = ({
       <h1 className="text-4xl mb-10">{item.title}</h1>
       <Image
         alt={item.title}
-        src={item.imageURL}
+        src={item.image.imageURL}
         height={200}
         width={600}
         className="w-auto"

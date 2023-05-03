@@ -35,11 +35,11 @@ export default function Home() {
 
         <h1 className="font-bold text-2xl ml-2 mb-3">Newest listings</h1>
         <div className="flex flex-wrap">
-          {allItems?.map(({ id, title, description, imageURL, price }) => (
+          {allItems?.map(({ id, title, description, image, price }) => (
             <ImageCard
               key={id}
               link={`/items/${id}`}
-              imageURL={imageURL}
+              imageURL={image.imageURL}
               title={title}
               content={description}
               price={price}

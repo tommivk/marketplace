@@ -34,8 +34,7 @@ const ItemForm = () => {
     },
   });
 
-  const itemSchemaWithoutImageURL = itemSchema.omit({ imageURL: true });
-  type ItemSchema = z.infer<typeof itemSchemaWithoutImageURL>;
+  type ItemSchema = z.infer<typeof itemSchema>;
 
   const {
     register,
@@ -43,11 +42,11 @@ const ItemForm = () => {
     reset,
     formState: { errors },
   } = useForm<ItemSchema>({
-    resolver: zodResolver(itemSchemaWithoutImageURL),
+    resolver: zodResolver(itemSchema),
   });
 
   const onSubmit: SubmitHandler<ItemSchema> = (data) => {
-    submitForm({ ...data, imageURL: "/components/potato.jpg" });
+    submitForm(data);
     console.log(data);
   };
 
