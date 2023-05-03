@@ -1,24 +1,53 @@
+import React from "react";
+import CategoryCard from "@/components/CategoryCard";
+import ImageCard from "@/components/ImageCard";
+import Link from "next/link";
 import { trpc } from "@/utils/trpc";
 
 export default function Home() {
-  const ctx = trpc.useContext();
-
-  const { data } = trpc.users.getAll.useQuery();
-  const { mutate } = trpc.users.create.useMutation({
-    onSuccess: () => {
-      void ctx.users.getAll.invalidate();
-    },
-  });
+  const { data: allItems } = trpc.items.getNewest.useQuery();
+  const { data: categories } = trpc.categories.getAll.useQuery();
 
   return (
-    <div>
-      <div>
-        Users: {data?.length}
-        {data?.map((user) => (
-          <div key={user.id}>{user.name}</div>
-        ))}
+    <div className="flex flex-col items-center">
+      <div className="mb-48 mt-20">
+        <h1 className="text-4xl text-center mt-20 font-extrabold">
+          Search For{" "}
+          <span className="text-transparent text-4xl bg-clip-text bg-gradient-to-r from-fuchsia-700 to-blue-400">
+            ANYTHING
+          </span>
+        </h1>
+        <input
+          type="text"
+          className="px-4 py-2 w-[500px] rounded-lg mt-20 text-black"
+          placeholder="Potato"
+          autoComplete="off"
+        />
       </div>
-      <button onClick={() => mutate({ name: "New User" })}>Create</button>
+
+      <div>
+        <h1 className="font-bold text-2xl ml-2 mb-3">Categories</h1>
+        <div className="flex flex-wrap mb-16">
+          {categories?.map((category) => (
+            <CategoryCard category={category} key={category.id} />
+          ))}
+        </div>
+
+        <h1 className="font-bold text-2xl ml-2 mb-3">Newest listings</h1>
+        <div className="flex flex-wrap">
+          {allItems?.map(({ id, title, description, imageURL, price }) => (
+            <ImageCard
+              key={id}
+              link={`/items/${id}`}
+              imageURL={imageURL}
+              title={title}
+              content={description}
+              price={price}
+            />
+          ))}
+        </div>
+        <Link href={"/create"}>Create new listing</Link>
+      </div>
     </div>
   );
 }
