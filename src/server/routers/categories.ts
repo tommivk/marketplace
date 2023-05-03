@@ -3,7 +3,9 @@ import { procedure, router } from "../trpc";
 
 export const categoriesRouter = router({
   getAll: procedure.query(async ({ ctx }) => {
-    const categories = await ctx.prisma.category.findMany();
+    const categories = await ctx.prisma.category.findMany({
+      orderBy: [{ createdAt: "asc" }],
+    });
     return categories;
   }),
 
