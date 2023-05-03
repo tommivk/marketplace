@@ -9,6 +9,14 @@ export const itemsRouter = router({
     return items;
   }),
 
+  getNewest: procedure.query(async ({ ctx }) => {
+    const items = await ctx.prisma.item.findMany({
+      take: 5,
+      orderBy: [{ createdAt: "desc" }],
+    });
+    return items;
+  }),
+
   findById: procedure
     .input(z.object({ itemId: z.string() }))
     .query(async ({ ctx, input }) => {
