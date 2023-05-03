@@ -20,10 +20,10 @@ export const categoriesRouter = router({
 
   //    TODO add admin validation
   create: procedure
-    .input(z.object({ name: z.string() }))
+    .input(z.object({ name: z.string(), imageURL: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const category = await ctx.prisma.category.create({
-        data: { name: input.name },
+        data: { name: input.name, imageURL: input.imageURL },
       });
       return category;
     }),
