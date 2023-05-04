@@ -30,7 +30,6 @@ const ItemForm = () => {
     trpc.items.createUploadURL.useMutation();
 
   const { mutate: submitForm } = trpc.items.create.useMutation({
-    onError: (e) => console.log("Error: ", e),
     onSuccess: (data) => {
       reset();
       ctx.items.getAll.invalidate();
@@ -59,7 +58,6 @@ const ItemForm = () => {
     const { uploadURL, fileName } = await createPresignedPOSTLink({
       contentLength,
     });
-
     const result = await fetch(uploadURL, {
       method: "PUT",
       body: file,
@@ -77,9 +75,8 @@ const ItemForm = () => {
       delete data["imageFiles"];
       submitForm({ ...data, fileName });
       console.log(data);
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to upload image");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Failed to create item");
     }
   };
 
