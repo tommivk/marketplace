@@ -16,7 +16,7 @@ export const createPresignedPOSTLink = async (contentLength: number) => {
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME ?? "",
     ContentType: "image/jpeg",
-    Key: fileName,
+    Key: `${userId}/${fileName}`,
     ContentLength: contentLength,
   };
 

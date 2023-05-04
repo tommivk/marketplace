@@ -79,14 +79,17 @@ export const itemsRouter = router({
     .input(itemSchema.extend({ fileName: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
+      const { fileName } = input;
+
+      const filePath = `${userId}/${fileName}`;
 
       const { success } = await createLimit.limit(userId);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
       const { id: imageId } = await ctx.prisma.image.create({
         data: {
-          authorId: ctx.userId,
-          imageURL: `https://tommivk-marketplace.imgix.net/${input.fileName}`,
+          authorId: userId,
+          imageURL: `https://tommivk-marketplace.imgix.net/${filePath}`,
         },
       });
 
