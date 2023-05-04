@@ -3,12 +3,33 @@ import { procedure, protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { itemSchema } from "@/schema";
 import { createPresignedPOSTLink } from "../aws";
+import { Redis } from "@upstash/redis";
+import { Ratelimit } from "@upstash/ratelimit";
+
+// Allow 2 requests per 5 minutes
+const uploadLinkLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(2, "5 m"),
+  analytics: true,
+});
+const createLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(2, "5 m"),
+  analytics: true,
+});
 
 export const itemsRouter = router({
-  // TODO: Add rate limiting
   createUploadURL: protectedProcedure
     .input(z.object({ contentLength: z.number() }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ ctx, input }) => {
+      const { success } = await uploadLinkLimit.limit(ctx.userId);
+      if (!success) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "You are creating items too fast",
+        });
+      }
+
       const { contentLength } = input;
 
       if (contentLength / (1024 * 1024) > 5) {
@@ -57,6 +78,11 @@ export const itemsRouter = router({
   create: protectedProcedure
     .input(itemSchema.extend({ fileName: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
+      const { userId } = ctx;
+
+      const { success } = await createLimit.limit(userId);
+      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
       const { id: imageId } = await ctx.prisma.image.create({
         data: {
           authorId: ctx.userId,
