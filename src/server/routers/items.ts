@@ -6,10 +6,24 @@ import { createPresignedPOSTLink } from "../aws";
 
 export const itemsRouter = router({
   // TODO: Add rate limiting
-  createUploadURL: protectedProcedure.mutation(async () => {
-    const { uploadURL, fileName } = await createPresignedPOSTLink();
-    return { uploadURL, fileName };
-  }),
+  createUploadURL: protectedProcedure
+    .input(z.object({ contentLength: z.number() }))
+    .mutation(async ({ input }) => {
+      const { contentLength } = input;
+
+      if (contentLength / (1024 * 1024) > 5) {
+        throw new TRPCError({
+          code: "PAYLOAD_TOO_LARGE",
+          message: "Maximum image size is 5 MB",
+        });
+      }
+
+      const { uploadURL, fileName } = await createPresignedPOSTLink(
+        contentLength
+      );
+
+      return { uploadURL, fileName };
+    }),
 
   getAll: procedure.query(async ({ ctx }) => {
     const items = await ctx.prisma.item.findMany({ include: { image: true } });

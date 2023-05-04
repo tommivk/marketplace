@@ -55,7 +55,10 @@ const ItemForm = () => {
   });
 
   const uploadImage = async (file: File) => {
-    const { uploadURL, fileName } = await createPresignedPOSTLink();
+    const contentLength = file.size;
+    const { uploadURL, fileName } = await createPresignedPOSTLink({
+      contentLength,
+    });
 
     const result = await fetch(uploadURL, {
       method: "PUT",

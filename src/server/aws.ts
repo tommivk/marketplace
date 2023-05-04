@@ -2,7 +2,7 @@ import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 
-export const createPresignedPOSTLink = async () => {
+export const createPresignedPOSTLink = async (contentLength: number) => {
   const fileName = uuidv4();
 
   const s3 = new S3Client({
@@ -17,6 +17,7 @@ export const createPresignedPOSTLink = async () => {
     Bucket: process.env.AWS_BUCKET_NAME ?? "",
     ContentType: "image/jpeg",
     Key: fileName,
+    ContentLength: contentLength,
   };
 
   const command = new PutObjectCommand(params);
