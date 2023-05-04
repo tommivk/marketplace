@@ -1,6 +1,7 @@
 import Button from "@/components/Button";
 import { trpc } from "@/utils/trpc";
-import React from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { FieldError, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { itemSchema } from "../../schema";
@@ -19,10 +20,14 @@ const CreateItem = () => {
 };
 
 const ItemForm = () => {
+  const [imagePreview, setImagePreview] = useState<string>();
+
   const ctx = trpc.useContext();
   const router = useRouter();
 
   const { data: categories, isLoading } = trpc.categories.getAll.useQuery();
+  const { mutateAsync: createPresignedPOSTLink } =
+    trpc.items.createUploadURL.useMutation();
 
   const { mutate: submitForm } = trpc.items.create.useMutation({
     onError: (e) => console.log("Error: ", e),
@@ -34,25 +39,62 @@ const ItemForm = () => {
     },
   });
 
-  type ItemSchema = z.infer<typeof itemSchema>;
+  const itemSchemaWithFile = itemSchema.extend({
+    imageFiles:
+      typeof window === "undefined" ? z.any() : z.instanceof(FileList),
+  });
+  type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ItemSchema>({
-    resolver: zodResolver(itemSchema),
+  } = useForm<ItemSchemaWithFile>({
+    resolver: zodResolver(itemSchemaWithFile),
   });
 
-  const onSubmit: SubmitHandler<ItemSchema> = (data) => {
-    submitForm(data);
-    console.log(data);
+  const uploadImage = async (file: File) => {
+    const { uploadURL, fileName } = await createPresignedPOSTLink();
+
+    const result = await fetch(uploadURL, {
+      method: "PUT",
+      body: file,
+    });
+    if (!result.ok) throw "Failed to upload image";
+
+    console.log(result);
+    return fileName;
+  };
+
+  const onSubmit: SubmitHandler<ItemSchemaWithFile> = async (data) => {
+    try {
+      const file = z.instanceof(File).parse(data.imageFiles[0]);
+      const fileName = await uploadImage(file);
+      delete data["imageFiles"];
+      submitForm({ ...data, fileName });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to upload image");
+    }
   };
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const handleFileChange = (e: { target: HTMLInputElement }) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setImagePreview(reader.result as string);
+      };
+      console.log("file changed");
+    }
+  };
 
   return (
     <div className="bg-zinc-900 px-10 py-6 w-[400px] m-5 rounded-md">
@@ -61,6 +103,18 @@ const ItemForm = () => {
         className="flex flex-col gap-2 justify-center items-center"
         onSubmit={handleSubmit(onSubmit)}
       >
+        {imagePreview && (
+          <Image src={imagePreview} alt="preview" height={300} width={300} />
+        )}
+        <p className="mr-auto ml-2">Upload image</p>
+        <input
+          {...register("imageFiles")}
+          required
+          type="file"
+          onChange={handleFileChange}
+        ></input>
+        <ErrorMessage error={errors.imageFiles as FieldError} />
+
         <SelectField
           {...register("categoryId")}
           options={categories}

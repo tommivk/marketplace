@@ -2,8 +2,15 @@ import { z } from "zod";
 import { procedure, protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { itemSchema } from "@/schema";
+import { createPresignedPOSTLink } from "../aws";
 
 export const itemsRouter = router({
+  // TODO: Add rate limiting
+  createUploadURL: protectedProcedure.mutation(async () => {
+    const { uploadURL, fileName } = await createPresignedPOSTLink();
+    return { uploadURL, fileName };
+  }),
+
   getAll: procedure.query(async ({ ctx }) => {
     const items = await ctx.prisma.item.findMany({ include: { image: true } });
     return items;
@@ -34,15 +41,21 @@ export const itemsRouter = router({
     }),
 
   create: protectedProcedure
-    .input(itemSchema)
+    .input(itemSchema.extend({ fileName: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const { id: imageId } = await ctx.prisma.image.create({
-        data: { authorId: ctx.userId, imageURL: "/category/potato.jpg" },
+        data: {
+          authorId: ctx.userId,
+          imageURL: `https://tommivk-marketplace.imgix.net/${input.fileName}`,
+        },
       });
 
       const item = await ctx.prisma.item.create({
         data: {
-          ...input,
+          title: input.title,
+          description: input.description,
+          categoryId: input.categoryId,
+          price: input.price,
           authorId: ctx.userId,
           imageId,
         },
