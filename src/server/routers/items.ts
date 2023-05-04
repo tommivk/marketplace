@@ -2,7 +2,7 @@ import { z } from "zod";
 import { procedure, protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { itemSchema } from "@/schema";
-import { createPresignedPOSTLink } from "../aws";
+import { createPresignedPOSTLink, fileExists } from "../aws";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 
@@ -39,9 +39,10 @@ export const itemsRouter = router({
         });
       }
 
-      const { uploadURL, fileName } = await createPresignedPOSTLink(
-        contentLength
-      );
+      const { uploadURL, fileName } = await createPresignedPOSTLink({
+        contentLength,
+        userId: ctx.userId,
+      });
 
       return { uploadURL, fileName };
     }),
@@ -85,6 +86,9 @@ export const itemsRouter = router({
 
       const { success } = await createLimit.limit(userId);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+
+      const validImage = await fileExists(filePath);
+      if (!validImage) throw new TRPCError({ code: "BAD_REQUEST" });
 
       const { id: imageId } = await ctx.prisma.image.create({
         data: {
