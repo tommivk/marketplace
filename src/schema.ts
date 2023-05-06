@@ -20,3 +20,7 @@ export const itemSchema = z
       .min(0, "Price must be positive"),
   })
   .strict();
+
+export const itemSchemaWithFile = itemSchema.extend({
+  imageFile: typeof window === "undefined" ? z.any() : z.instanceof(File),
+});
