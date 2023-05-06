@@ -1,15 +1,17 @@
 import Button from "@/components/Button";
 import { trpc } from "@/utils/trpc";
-import React, { useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { FieldError, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { itemSchema } from "../../schema";
+import { itemSchemaWithFile } from "../../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import Input from "@/components/Input";
 import SelectField from "@/components/SelectField";
+import DropZoneField from "@/components/DropZoneField";
+
+type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
 const CreateItem = () => {
   return (
@@ -20,8 +22,6 @@ const CreateItem = () => {
 };
 
 const ItemForm = () => {
-  const [imagePreview, setImagePreview] = useState<string>();
-
   const ctx = trpc.useContext();
   const router = useRouter();
 
@@ -38,16 +38,11 @@ const ItemForm = () => {
     },
   });
 
-  const itemSchemaWithFile = itemSchema.extend({
-    imageFiles:
-      typeof window === "undefined" ? z.any() : z.instanceof(FileList),
-  });
-  type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
-
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<ItemSchemaWithFile>({
     resolver: zodResolver(itemSchemaWithFile),
@@ -70,9 +65,9 @@ const ItemForm = () => {
 
   const onSubmit: SubmitHandler<ItemSchemaWithFile> = async (data) => {
     try {
-      const file = z.instanceof(File).parse(data.imageFiles[0]);
+      const file = z.instanceof(File).parse(data.imageFile);
       const fileName = await uploadImage(file);
-      delete data["imageFiles"];
+      delete data["imageFile"];
       submitForm({ ...data, fileName });
       console.log(data);
     } catch (e: any) {
@@ -84,73 +79,94 @@ const ItemForm = () => {
     return <div>Loading...</div>;
   }
 
-  const handleFileChange = (e: { target: HTMLInputElement }) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setImagePreview(reader.result as string);
-      };
-      console.log("file changed");
-    }
-  };
-
   return (
-    <div className="bg-zinc-900 px-10 py-6 w-[400px] m-5 rounded-md">
-      <h1 className="text-xl font-bold text-center mb-6">List New Item</h1>
+    <div className="bg-zinc-900 px-6 py-6 w-[500px] m-5 rounded-lg">
+      <h1 className="text-xl font-bold text-center mb-8">List New Item</h1>
       <form
-        className="flex flex-col gap-2 justify-center items-center"
+        className="flex flex-col gap-2 justify-center"
         onSubmit={handleSubmit(onSubmit)}
       >
-        {imagePreview && (
-          <Image src={imagePreview} alt="preview" height={300} width={300} />
-        )}
-        <p className="mr-auto ml-2">Upload image</p>
-        <input
-          {...register("imageFiles")}
-          required
-          type="file"
-          onChange={handleFileChange}
-        ></input>
-        <ErrorMessage error={errors.imageFiles as FieldError} />
+        <FormField>
+          <DropZoneField name="imageFile" control={control} />
+          <ErrorMessage
+            error={errors.imageFile as FieldError}
+            className="text-center"
+          />
+        </FormField>
 
-        <SelectField
-          {...register("categoryId")}
-          options={categories}
-          className="mr-auto"
-        />
-        <ErrorMessage error={errors.categoryId} />
+        <FormField>
+          <Label text="Category" />
+          <SelectField
+            {...register("categoryId")}
+            options={categories}
+            className="mr-auto"
+          />
+          <ErrorMessage error={errors.categoryId} />
+        </FormField>
 
-        <Input {...register("title")} placeholder="Title" autoComplete="off" />
-        <ErrorMessage error={errors.title} />
+        <FormField>
+          <Label text="Title" />
+          <Input
+            {...register("title")}
+            placeholder="Title"
+            autoComplete="off"
+          />
+          <ErrorMessage error={errors.title} />
+        </FormField>
 
-        <Input
-          {...register("description")}
-          placeholder="Description"
-          autoComplete="off"
-        />
-        <ErrorMessage error={errors.description} />
+        <FormField>
+          <Label text="Price" />
+          <Input
+            {...register("price", {
+              valueAsNumber: true,
+            })}
+            type="number"
+            placeholder="Price"
+            autoComplete="off"
+          />
+          <ErrorMessage error={errors.price} />
+        </FormField>
 
-        <Input
-          {...register("price", {
-            valueAsNumber: true,
-          })}
-          type="number"
-          placeholder="Price"
-          autoComplete="off"
-        />
-        <ErrorMessage error={errors.price} />
+        <FormField>
+          <Label text="Description" />
+          <textarea
+            {...register("description")}
+            className="bg-zinc-800 w-full h-40 p-2 text-sm rounded-md"
+            placeholder="Description"
+            autoComplete="off"
+          />
+          <ErrorMessage error={errors.description} />
+        </FormField>
 
-        <Button className="mt-4">SUBMIT</Button>
+        <Button className="mt-4 mx-auto" type="submit">
+          SUBMIT
+        </Button>
       </form>
     </div>
   );
 };
 
-const ErrorMessage = ({ error }: { error?: FieldError }) => {
+const FormField = ({ children }: React.PropsWithChildren) => {
+  return <div className="mb-2">{children}</div>;
+};
+
+const Label = ({ text }: { text: string }) => {
+  return <p className="mr-auto ml-1 mb-1 text-xs text-slate-500">{text}</p>;
+};
+
+const ErrorMessage = ({
+  error,
+  className,
+}: {
+  error?: FieldError;
+  className?: string;
+}) => {
   if (!error) return <></>;
-  return <p className="text-xs text-red-500 ">{error.message}</p>;
+  return (
+    <p className={`text-xs text-red-500 mt-2 ml-1 ${className}`}>
+      {error.message}
+    </p>
+  );
 };
 
 export default CreateItem;
