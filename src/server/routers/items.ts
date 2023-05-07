@@ -64,6 +64,29 @@ export const itemsRouter = router({
     return items;
   }),
 
+  search: procedure
+    .input(z.object({ query: z.string().optional() }))
+    .query(async ({ ctx, input }) => {
+      const items = await ctx.prisma.item.findMany({
+        where: {
+          OR: [
+            {
+              title: { contains: input.query, mode: "insensitive" },
+            },
+            { description: { contains: input.query, mode: "insensitive" } },
+          ],
+        },
+        include: {
+          image: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return items;
+    }),
+
   findById: procedure
     .input(z.object({ itemId: z.string() }))
     .query(async ({ ctx, input }) => {
