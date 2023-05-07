@@ -16,11 +16,15 @@ export const itemSchema = z
     price: z
       .number({
         required_error: "Price is required",
+        invalid_type_error: "Price is required",
       })
       .min(0, "Price must be positive"),
   })
   .strict();
 
 export const itemSchemaWithFile = itemSchema.extend({
-  imageFile: typeof window === "undefined" ? z.any() : z.instanceof(File),
+  imageFile:
+    typeof window === "undefined"
+      ? z.any()
+      : z.instanceof(File, { message: "Image is required" }),
 });
