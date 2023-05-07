@@ -3,10 +3,13 @@ import CategoryCard from "@/components/CategoryCard";
 import ImageCard from "@/components/ImageCard";
 import Link from "next/link";
 import { trpc } from "@/utils/trpc";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { data: allItems } = trpc.items.getNewest.useQuery();
   const { data: categories } = trpc.categories.getAll.useQuery();
+
+  const router = useRouter();
 
   return (
     <div className="flex flex-col items-center">
@@ -22,6 +25,13 @@ export default function Home() {
           className="px-4 py-2 w-[500px] rounded-lg mt-20 text-black"
           placeholder="Potato"
           autoComplete="off"
+          onKeyDown={(e) => {
+            const value = (e.target as HTMLInputElement).value?.trim();
+            if (e.key === "Enter") {
+              if (value === "") return;
+              router.push({ pathname: `/search`, query: { query: value } });
+            }
+          }}
         />
       </div>
 
