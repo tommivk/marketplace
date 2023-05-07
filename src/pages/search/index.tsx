@@ -16,33 +16,62 @@ dayjs.extend(relativeTime);
 
 const SearchPage: NextPage = ({
   query,
+  orderBy,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { data: items } = trpc.items.search.useQuery({
     query,
+    orderBy,
   });
 
   const router = useRouter();
-  console.log(items);
+
+  const handleSearch = ({
+    queryStr,
+    sortByStr,
+  }: {
+    queryStr?: string;
+    sortByStr?: string;
+  }) => {
+    router.push({
+      pathname: "/search",
+      query: {
+        query: queryStr ?? query,
+        orderBy: sortByStr ?? orderBy,
+      },
+    });
+  };
+
   return (
-    <div>
-      <input
-        type="text"
-        defaultValue={query}
-        className="px-4 py-2 w-[500px] rounded-lg mt-20 mb-10 text-black m-auto block"
-        placeholder="Search items..."
-        autoComplete="off"
-        onKeyDown={(e) => {
-          console.log({ e });
-          const value = (e.target as HTMLInputElement).value.trim();
-          if (value == "") return;
-          if (e.key === "Enter") {
-            router.push({
-              pathname: `/search`,
-              query: { query: value },
-            });
-          }
-        }}
-      />
+    <div className="max-w-xl mx-auto">
+      <div>
+        <input
+          type="text"
+          defaultValue={query}
+          className="px-4 py-2 w-[500px] rounded-lg mt-20 mb-10 text-black m-auto block"
+          placeholder="Search items..."
+          autoComplete="off"
+          onKeyDown={(e) => {
+            const value = (e.target as HTMLInputElement).value.trim();
+            if (value == "") return;
+            if (e.key === "Enter") {
+              e.preventDefault();
+              handleSearch({ queryStr: value });
+            }
+          }}
+        />
+        <select
+          defaultValue={"1"}
+          onChange={(e) => {
+            handleSearch({ sortByStr: e.target.value });
+          }}
+          className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
+        >
+          <option value={"1"}>Newest first</option>
+          <option value={"2"}>Oldest first</option>
+          <option value={"3"}>Highest price</option>
+          <option value={"4"}>Lowest price</option>
+        </select>
+      </div>
       <ItemList items={items} />
     </div>
   );
@@ -52,10 +81,13 @@ type RouterOutput = inferRouterOutputs<AppRouter>;
 type Item = RouterOutput["items"]["search"][number];
 
 const ItemList = ({ items }: { items?: Item[] }) => {
+  if (items?.length === 0) {
+    return <p className="text-center mt-20">No items found</p>;
+  }
   return (
     <ul className="max-w-2xl p-2 m-auto">
       {items?.map(({ id, title, price, createdAt, image: { imageURL } }) => (
-        <li key={id} className="mx-auto my-2 max-w-xl rounded-lg group">
+        <li key={id} className="my-2 rounded-lg group">
           <Divider />
           <Link href={`/items/${id} `}>
             <div className="flex">
@@ -108,9 +140,9 @@ const ItemContent = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query } = ctx.query;
+  const { query = "", orderBy = "1" } = ctx.query;
   return {
-    props: { query },
+    props: { query, orderBy },
   };
 };
 

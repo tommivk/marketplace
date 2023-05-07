@@ -5,6 +5,7 @@ import { itemSchema } from "@/schema";
 import { createPresignedPOSTLink, fileExists } from "../aws";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { Item } from "@prisma/client";
 
 // Allow 2 requests per 5 minutes
 const uploadLinkLimit = new Ratelimit({
@@ -65,8 +66,15 @@ export const itemsRouter = router({
   }),
 
   search: procedure
-    .input(z.object({ query: z.string().optional() }))
+    .input(
+      z.object({
+        query: z.string().optional(),
+        orderBy: z.enum(["1", "2", "3", "4"]),
+      })
+    )
     .query(async ({ ctx, input }) => {
+      const orderBy = getOrderbyArgs(input.orderBy);
+
       const items = await ctx.prisma.item.findMany({
         where: {
           OR: [
@@ -79,9 +87,7 @@ export const itemsRouter = router({
         include: {
           image: true,
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy,
       });
 
       return items;
@@ -134,3 +140,26 @@ export const itemsRouter = router({
       return item;
     }),
 });
+
+const getOrderbyArgs = (order: "1" | "2" | "3" | "4") => {
+  const orderBy: Partial<Record<keyof Item, "asc" | "desc">> = {};
+
+  switch (order) {
+    case "1":
+      orderBy["createdAt"] = "desc";
+      break;
+    case "2":
+      orderBy["createdAt"] = "asc";
+      break;
+    case "3":
+      orderBy["price"] = "desc";
+      break;
+    case "4":
+      orderBy["price"] = "asc";
+      break;
+    default:
+      return;
+  }
+
+  return orderBy;
+};
