@@ -6,7 +6,7 @@ import { z } from "zod";
 import { itemSchemaWithFile } from "../../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
-import toast from "react-hot-toast";
+import { useFormStore } from "@/store/useFormStore";
 import Input from "@/components/Input";
 import SelectField from "@/components/SelectField";
 import DropZoneField from "@/components/DropZoneField";
@@ -18,57 +18,23 @@ import FormContainer from "@/components/FormContainer";
 type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
 const ItemForm = () => {
-  const ctx = trpc.useContext();
   const router = useRouter();
-
+  const formStore = useFormStore();
   const { data: categories, isLoading } = trpc.categories.getAll.useQuery();
-  const { mutateAsync: createPresignedPOSTLink } =
-    trpc.items.createUploadURL.useMutation();
-
-  const { mutate: submitForm } = trpc.items.create.useMutation({
-    onSuccess: (data) => {
-      reset();
-      ctx.items.getAll.invalidate();
-      toast.success("New Item Created!");
-      router.push(`/items/${data.id}`);
-    },
-  });
 
   const {
     register,
     handleSubmit,
-    reset,
     control,
     formState: { errors },
   } = useForm<ItemSchemaWithFile>({
     resolver: zodResolver(itemSchemaWithFile),
+    defaultValues: formStore.itemDetails,
   });
 
-  const uploadImage = async (file: File) => {
-    const contentLength = file.size;
-    const { uploadURL, fileName } = await createPresignedPOSTLink({
-      contentLength,
-    });
-    const result = await fetch(uploadURL, {
-      method: "PUT",
-      body: file,
-    });
-    if (!result.ok) throw "Failed to upload image";
-
-    console.log(result);
-    return fileName;
-  };
-
   const onSubmit: SubmitHandler<ItemSchemaWithFile> = async (data) => {
-    try {
-      const file = z.instanceof(File).parse(data.imageFile);
-      const fileName = await uploadImage(file);
-      delete data["imageFile"];
-      submitForm({ ...data, fileName });
-      console.log(data);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Failed to create item");
-    }
+    formStore.setData({ step: "itemDetails", data });
+    router.push("/create/contact-details");
   };
 
   if (isLoading) {
@@ -83,7 +49,11 @@ const ItemForm = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <FormField>
-          <DropZoneField name="imageFile" control={control} />
+          <DropZoneField
+            name="imageFile"
+            imageFile={formStore.itemDetails?.imageFile}
+            control={control}
+          />
           <ErrorMessage
             error={errors.imageFile as FieldError}
             className="text-center"
@@ -134,8 +104,8 @@ const ItemForm = () => {
           <ErrorMessage error={errors.description} />
         </FormField>
 
-        <Button className="mt-4 mx-auto" type="submit">
-          SUBMIT
+        <Button className="mt-4 ml-auto" type="submit">
+          NEXT
         </Button>
       </form>
     </FormContainer>

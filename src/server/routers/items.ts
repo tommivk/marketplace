@@ -127,10 +127,17 @@ export const itemsRouter = router({
     }),
 
   create: protectedProcedure
-    .input(itemSchema.extend({ fileName: z.string().min(1) }))
+    .input(
+      itemSchema.extend({
+        fileName: z.string().min(1),
+        email: z.string().min(1),
+        phoneNumber: z.string().min(1),
+        username: z.string().min(1),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
-      const { fileName } = input;
+      const { fileName, email, phoneNumber, username } = input;
 
       const filePath = `${userId}/${fileName}`;
 
@@ -147,14 +154,23 @@ export const itemsRouter = router({
         },
       });
 
+      const { id: contactDetailsId } = await ctx.prisma.contactDetails.create({
+        data: {
+          email,
+          phoneNumber,
+          username,
+        },
+      });
+
       const item = await ctx.prisma.item.create({
         data: {
+          authorId: userId,
           title: input.title,
           description: input.description,
           categoryId: input.categoryId,
           price: input.price,
-          authorId: ctx.userId,
           imageId,
+          contactDetailsId,
         },
       });
 
