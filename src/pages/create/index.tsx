@@ -10,16 +10,12 @@ import toast from "react-hot-toast";
 import Input from "@/components/Input";
 import SelectField from "@/components/SelectField";
 import DropZoneField from "@/components/DropZoneField";
+import FormField from "@/components/FormField";
+import ErrorMessage from "@/components/ErrorMessage";
+import FormLabel from "@/components/FormLabel";
+import FormContainer from "@/components/FormContainer";
 
 type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
-
-const CreateItem = () => {
-  return (
-    <div className="h-full flex justify-center items-center">
-      <ItemForm />
-    </div>
-  );
-};
 
 const ItemForm = () => {
   const ctx = trpc.useContext();
@@ -80,7 +76,7 @@ const ItemForm = () => {
   }
 
   return (
-    <div className="bg-zinc-900 px-6 py-6 w-[500px] m-5 rounded-lg">
+    <FormContainer>
       <h1 className="text-xl font-bold text-center mb-8">List New Item</h1>
       <form
         className="flex flex-col gap-2 justify-center"
@@ -95,7 +91,7 @@ const ItemForm = () => {
         </FormField>
 
         <FormField>
-          <Label text="Category" />
+          <FormLabel text="Category" />
           <SelectField
             {...register("categoryId")}
             options={categories}
@@ -105,7 +101,7 @@ const ItemForm = () => {
         </FormField>
 
         <FormField>
-          <Label text="Title" />
+          <FormLabel text="Title" />
           <Input
             {...register("title")}
             placeholder="Title"
@@ -115,7 +111,7 @@ const ItemForm = () => {
         </FormField>
 
         <FormField>
-          <Label text="Price" />
+          <FormLabel text="Price" />
           <Input
             {...register("price", {
               valueAsNumber: true,
@@ -128,7 +124,7 @@ const ItemForm = () => {
         </FormField>
 
         <FormField>
-          <Label text="Description" />
+          <FormLabel text="Description" />
           <textarea
             {...register("description")}
             className="bg-zinc-800 w-full h-40 p-2 text-sm rounded-md"
@@ -142,31 +138,8 @@ const ItemForm = () => {
           SUBMIT
         </Button>
       </form>
-    </div>
+    </FormContainer>
   );
 };
 
-const FormField = ({ children }: React.PropsWithChildren) => {
-  return <div className="mb-2">{children}</div>;
-};
-
-const Label = ({ text }: { text: string }) => {
-  return <p className="mr-auto ml-1 mb-1 text-xs text-slate-500">{text}</p>;
-};
-
-const ErrorMessage = ({
-  error,
-  className,
-}: {
-  error?: FieldError;
-  className?: string;
-}) => {
-  if (!error) return <></>;
-  return (
-    <p className={`text-xs text-red-500 mt-2 ml-1 ${className}`}>
-      {error.message}
-    </p>
-  );
-};
-
-export default CreateItem;
+export default ItemForm;
