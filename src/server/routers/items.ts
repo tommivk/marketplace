@@ -19,15 +19,28 @@ const createLimit = new Ratelimit({
   analytics: true,
 });
 
+const dailyLimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, "1 d"),
+  analytics: true,
+});
+
 export const itemsRouter = router({
   createUploadURL: protectedProcedure
     .input(z.object({ contentLength: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const { success } = await uploadLinkLimit.limit(ctx.userId);
+      const { success: dailySuccess } = await dailyLimit.limit(ctx.userId);
       if (!success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
           message: "You are creating items too fast",
+        });
+      }
+      if (!dailySuccess) {
+        throw new TRPCError({
+          code: "TOO_MANY_REQUESTS",
+          message: "Daily limit reached",
         });
       }
 
