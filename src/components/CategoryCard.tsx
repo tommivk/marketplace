@@ -21,7 +21,7 @@ const CategoryCard = ({ category }: Props) => {
       title={category.name}
       imageURL={category.imageURL}
       content={itemCountLoading ? "" : `${itemCount} Items`}
-      link={""}
+      link={`/search?c=${category.name}`}
     />
   );
 };
