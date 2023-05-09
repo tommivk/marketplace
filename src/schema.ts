@@ -34,5 +34,5 @@ export const contactDetailsSchema = z.object({
     .string()
     .min(2, { message: "Username must be at least 2 characters long" }),
   email: z.string().email(),
-  phoneNumber: z.string().min(1),
+  phoneNumber: z.string().min(1, "Phone number is required"),
 });
