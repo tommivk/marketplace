@@ -13,7 +13,7 @@ const ItemPage: NextPage = ({
   if (!item) return <div>404</div>;
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center max-w-2xl m-auto">
       <h1 className="text-4xl mb-10">{item.title}</h1>
       <Image
         alt={item.title}

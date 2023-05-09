@@ -13,8 +13,8 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="mb-48 mt-20">
-        <h1 className="text-4xl text-center mt-20 font-extrabold">
+      <div className="mt-48 mb-48">
+        <h1 className="text-4xl text-center font-extrabold">
           Search For{" "}
           <span className="text-transparent text-4xl bg-clip-text bg-gradient-to-r from-fuchsia-700 to-blue-400">
             ANYTHING
@@ -23,7 +23,7 @@ export default function Home() {
         <input
           type="text"
           className="px-4 py-2 w-[500px] rounded-lg mt-20 text-black"
-          placeholder="Potato"
+          placeholder="Search items..."
           autoComplete="off"
           onKeyDown={(e) => {
             const value = (e.target as HTMLInputElement).value?.trim();
