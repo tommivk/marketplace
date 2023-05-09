@@ -12,8 +12,8 @@ const Input = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
       {...props}
       className={`py-2 px-3 w-full text-sm 
            bg-slate-200 bg-opacity-5 
-           rounded-md outline-none 
-           text-slate-200
+           rounded-md text-slate-200 outline-none
+           border-[1px] border-transparent focus:border-slate-200
            ${props.className}
           `}
       ref={ref}

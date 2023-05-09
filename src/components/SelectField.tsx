@@ -14,7 +14,8 @@ const SelectField = forwardRef<HTMLSelectElement, Props>(
         {...props}
         ref={ref}
         className={`
-          bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md 
+          bg-zinc-800 text-slate-200 text-sm px-5 py-2
+          outline-none border-[1px] border-transparent focus:border-slate-200 rounded-md
           ${props.className}
         `}
         defaultValue={""}
