@@ -11,58 +11,98 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { inferRouterOutputs } from "@trpc/server";
 import { AppRouter } from "@/server/root";
+import { FormEvent, useRef } from "react";
+import Button from "@/components/Button";
 
 dayjs.extend(relativeTime);
 
 const SearchPage: NextPage = ({
   query,
   orderBy,
+  c,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+  const { data: categories } = trpc.categories.getAll.useQuery();
   const { data: items } = trpc.items.search.useQuery({
     query,
     orderBy,
+    c,
   });
+
+  const categoryRef = useRef<HTMLSelectElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const router = useRouter();
 
-  const handleSearch = ({
-    queryStr,
-    sortByStr,
-  }: {
-    queryStr?: string;
-    sortByStr?: string;
-  }) => {
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault();
+    const inputValue = inputRef.current?.value;
+    const selectValue = categoryRef.current?.value;
     router.push({
       pathname: "/search",
       query: {
-        query: queryStr ?? query,
-        orderBy: sortByStr ?? orderBy,
+        query: inputValue ?? query,
+        orderBy,
+        c: selectValue ?? c,
       },
     });
   };
 
   return (
-    <div className="max-w-xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <div>
-        <input
-          type="text"
-          defaultValue={query}
-          className="px-4 py-2 w-[500px] rounded-lg mt-20 mb-10 text-black m-auto block"
-          placeholder="Search items..."
-          autoComplete="off"
-          onKeyDown={(e) => {
-            const value = (e.target as HTMLInputElement).value.trim();
-            if (value == "") return;
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleSearch({ queryStr: value });
-            }
-          }}
-        />
+        <form>
+          <div className="flex items-center justify-center mt-20 mb-20 gap-2">
+            <input
+              type="text"
+              ref={inputRef}
+              defaultValue={query}
+              className="px-4 py-2 w-[500px] rounded-lg  text-black m-auto block"
+              placeholder="Search items..."
+              autoComplete="off"
+              onKeyDown={(e) => {
+                const value = (e.target as HTMLInputElement).value.trim();
+                if (value == "") return;
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSearch(e);
+                }
+              }}
+            />
+            <select
+              ref={categoryRef}
+              className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-3 py-2 outline-none rounded-md"
+              defaultValue={c}
+            >
+              <option value={""}>All categories</option>
+              {categories?.map(({ id, name }) => (
+                <option key={id} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                handleSearch(e);
+              }}
+            >
+              Search
+            </Button>
+          </div>
+        </form>
+
         <select
           defaultValue={"1"}
           onChange={(e) => {
-            handleSearch({ sortByStr: e.target.value });
+            e.preventDefault();
+            router.push({
+              pathname: "/search",
+              query: {
+                query,
+                orderBy: e.target.value,
+                c,
+              },
+            });
           }}
           className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
         >
@@ -86,17 +126,31 @@ const ItemList = ({ items }: { items?: Item[] }) => {
   }
   return (
     <ul className="max-w-2xl p-2 m-auto">
-      {items?.map(({ id, title, price, createdAt, image: { imageURL } }) => (
-        <li key={id} className="my-2 rounded-lg group">
-          <Divider />
-          <Link href={`/items/${id} `}>
-            <div className="flex">
-              <ItemImage imageURL={imageURL} />
-              <ItemContent title={title} price={price} createdAt={createdAt} />
-            </div>
-          </Link>
-        </li>
-      ))}
+      {items?.map(
+        ({
+          id,
+          title,
+          price,
+          createdAt,
+          category: { name: category },
+          image: { imageURL },
+        }) => (
+          <li key={id} className="my-2 rounded-lg group">
+            <Divider />
+            <Link href={`/items/${id} `}>
+              <div className="flex">
+                <ItemImage imageURL={imageURL} />
+                <ItemContent
+                  title={title}
+                  price={price}
+                  createdAt={createdAt}
+                  category={category}
+                />
+              </div>
+            </Link>
+          </li>
+        )
+      )}
     </ul>
   );
 };
@@ -123,15 +177,18 @@ const ItemContent = ({
   title,
   price,
   createdAt,
+  category,
 }: {
   title: string;
   price: number;
   createdAt: Date;
+  category: string;
 }) => {
   return (
     <div className="w-full px-2 ml-2 flex flex-col">
       <h1 className="text-lg">{title}</h1>
       <p className="text-2xl">{price} €</p>
+      <p>{category}</p>
       <p className="mt-auto mb-2 text-xs text-zinc-500">
         {dayjs().to(createdAt)}
       </p>
@@ -140,9 +197,9 @@ const ItemContent = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query = "", orderBy = "1" } = ctx.query;
+  const { query = "", orderBy = "1", c = "" } = ctx.query;
   return {
-    props: { query, orderBy },
+    props: { query, orderBy, c },
   };
 };
 

@@ -70,6 +70,7 @@ export const itemsRouter = router({
       z.object({
         query: z.string().optional(),
         orderBy: z.enum(["1", "2", "3", "4"]),
+        c: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -83,9 +84,17 @@ export const itemsRouter = router({
             },
             { description: { contains: input.query, mode: "insensitive" } },
           ],
+
+          category: {
+            name: {
+              contains: input.c,
+              mode: "insensitive",
+            },
+          },
         },
         include: {
           image: true,
+          category: true,
         },
         orderBy,
       });
