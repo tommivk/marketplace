@@ -10,15 +10,17 @@ type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 const DropZoneField = ({
   name,
   control,
+  imageFile,
 }: {
   name: keyof ItemSchemaWithFile;
   control: Control<ItemSchemaWithFile>;
+  imageFile?: File;
 }) => {
   return (
     <Controller
       name={name}
       render={({ field: { onChange } }) => (
-        <DropZone onChange={(image) => onChange(image)} />
+        <DropZone onChange={(image) => onChange(image)} imageFile={imageFile} />
       )}
       control={control}
       defaultValue={undefined}
@@ -28,10 +30,14 @@ const DropZoneField = ({
 
 const DropZone = ({
   onChange,
+  imageFile,
 }: React.PropsWithChildren & {
   onChange: (e?: File) => void;
+  imageFile?: File;
 }) => {
-  const [imagePreview, setImagePreview] = useState<string>();
+  const [imagePreview, setImagePreview] = useState<string | undefined>(
+    imageFile ? URL.createObjectURL(imageFile) : undefined
+  );
 
   const onDrop = useCallback(
     (images: File[]) => {
