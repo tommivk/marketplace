@@ -17,14 +17,4 @@ export const categoriesRouter = router({
       });
       return itemCount;
     }),
-
-  //    TODO add admin validation
-  create: procedure
-    .input(z.object({ name: z.string(), imageURL: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const category = await ctx.prisma.category.create({
-        data: { name: input.name, imageURL: input.imageURL },
-      });
-      return category;
-    }),
 });
