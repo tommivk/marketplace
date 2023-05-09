@@ -93,15 +93,14 @@ export const itemsRouter = router({
         where: {
           OR: [
             {
-              title: { contains: input.query, mode: "insensitive" },
+              title: { contains: input.query },
             },
-            { description: { contains: input.query, mode: "insensitive" } },
+            { description: { contains: input.query } },
           ],
 
           category: {
             name: {
               contains: input.c,
-              mode: "insensitive",
             },
           },
         },
