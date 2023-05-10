@@ -20,6 +20,7 @@ const Button = ({ children, loading, color = "primary", ...props }: Props) => {
       className={`
               ${colors[color]}
               text-slate-200 text-sm font-medium w-fit px-10 py-2 rounded-xl
+              disabled:pointer-events-none
               ${loading ? "pointer-events-none" : ""}
               ${props.className}
           `}
