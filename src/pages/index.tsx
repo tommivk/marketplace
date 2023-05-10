@@ -1,6 +1,5 @@
 import React from "react";
 import CategoryCard from "@/components/CategoryCard";
-import ImageCard from "@/components/ImageCard";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -8,9 +7,10 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { appRouter } from "@/server/root";
 import { prisma } from "@/server/db";
 import superjson from "superjson";
+import Carousel from "@/components/Carousel";
 
 export default function Home() {
-  const { data: allItems } = trpc.items.getNewest.useQuery();
+  const { data: newestItems } = trpc.items.getNewest.useQuery();
   const { data: categories } = trpc.categories.getAll.useQuery();
 
   const router = useRouter();
@@ -48,18 +48,7 @@ export default function Home() {
         </div>
 
         <h1 className="font-bold text-2xl ml-2 mb-3">Newest listings</h1>
-        <div className="flex flex-wrap">
-          {allItems?.map(({ id, title, description, image, price }) => (
-            <ImageCard
-              key={id}
-              link={`/items/${id}`}
-              imageURL={image.imageURL}
-              title={title}
-              content={description}
-              price={price}
-            />
-          ))}
-        </div>
+        <Carousel items={newestItems} />
       </div>
     </div>
   );
