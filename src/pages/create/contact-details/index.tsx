@@ -18,7 +18,6 @@ import { useState } from "react";
 const ContactDetailsPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
 
-  const ctx = trpc.useContext();
   const formStore = useFormStore();
   const router = useRouter();
 
@@ -26,7 +25,6 @@ const ContactDetailsPage: NextPage = () => {
   const {
     register,
     handleSubmit,
-    reset,
     getValues,
     formState: { errors },
   } = useForm<ContactDetails>({
@@ -39,9 +37,7 @@ const ContactDetailsPage: NextPage = () => {
 
   const { mutate: createItem } = trpc.items.create.useMutation({
     onSuccess: (data) => {
-      ctx.items.getAll.invalidate();
       toast.success("New Item Created!");
-      reset();
       formStore.clearAll();
       router.push(`/items/${data.id}`);
     },
@@ -74,7 +70,6 @@ const ContactDetailsPage: NextPage = () => {
 
       delete itemDetails["imageFile"];
       createItem({ ...itemDetails, ...contactDetails, fileName });
-      router.push("");
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to create item");
     } finally {
