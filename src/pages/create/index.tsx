@@ -14,6 +14,8 @@ import FormField from "@/components/FormField";
 import ErrorMessage from "@/components/ErrorMessage";
 import FormLabel from "@/components/FormLabel";
 import FormContainer from "@/components/FormContainer";
+import { GetServerSideProps } from "next";
+import { getAuth } from "@clerk/nextjs/server";
 
 type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
@@ -110,6 +112,21 @@ const ItemForm = () => {
       </form>
     </FormContainer>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { userId } = getAuth(ctx.req);
+  if (!userId) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
 };
 
 export default ItemForm;
