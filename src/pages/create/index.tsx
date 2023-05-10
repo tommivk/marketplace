@@ -119,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!userId) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/login?r=create",
         permanent: false,
       },
     };
