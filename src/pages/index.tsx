@@ -4,6 +4,11 @@ import ImageCard from "@/components/ImageCard";
 import Link from "next/link";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { appRouter } from "@/server/root";
+import { prisma } from "@/server/db";
+import superjson from "superjson";
 
 export default function Home() {
   const { data: allItems } = trpc.items.getNewest.useQuery();
@@ -61,3 +66,20 @@ export default function Home() {
     </div>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: { prisma, userId: null },
+    transformer: superjson,
+  });
+
+  await helpers.categories.getAll.prefetch();
+  await helpers.items.getNewest.prefetch();
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  };
+};
