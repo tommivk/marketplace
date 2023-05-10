@@ -69,7 +69,7 @@ export const itemsRouter = router({
 
   getNewest: procedure.query(async ({ ctx }) => {
     const items = await ctx.prisma.item.findMany({
-      take: 5,
+      take: 10,
       orderBy: [{ createdAt: "desc" }],
       include: {
         image: true,
