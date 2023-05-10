@@ -15,7 +15,7 @@ datasource db {
 model Item {
   id               String   @id @default(cuid())
   title            String
-  description      String
+  description      String   @db.VarChar(2000)
   authorId         String
   category         Category @relation(fields: [categoryId], references: [id])
   categoryId       String
