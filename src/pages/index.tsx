@@ -16,7 +16,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-20">
       <div className="mt-48 mb-48">
         <h1 className="text-4xl text-center font-extrabold">
           Search For{" "}
