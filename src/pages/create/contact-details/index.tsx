@@ -13,8 +13,10 @@ import FormContainer from "@/components/FormContainer";
 import FormField from "@/components/FormField";
 import FormLabel from "@/components/FormLabel";
 import ErrorMessage from "@/components/ErrorMessage";
+import { useState } from "react";
 
 const ContactDetailsPage: NextPage = () => {
+  const [loading, setLoading] = useState(false);
   const ctx = trpc.useContext();
   const formStore = useFormStore();
   const router = useRouter();
@@ -60,6 +62,7 @@ const ContactDetailsPage: NextPage = () => {
 
   const onSubmit: SubmitHandler<ContactDetails> = async (contactDetails) => {
     try {
+      setLoading(true);
       const itemDetails = formStore.itemDetails;
       console.log("ITEM: ", itemDetails);
       if (!itemDetails) throw "Itemdetails data was undefined";
@@ -72,6 +75,8 @@ const ContactDetailsPage: NextPage = () => {
       router.push("");
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to create item");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -122,7 +127,9 @@ const ContactDetailsPage: NextPage = () => {
           <Button onClick={handleGoBack} type="button" color="secondary">
             {"<-"}
           </Button>
-          <Button type="submit">SUBMIT</Button>
+          <Button type="submit" loading={loading}>
+            SUBMIT
+          </Button>
         </div>
       </form>
     </FormContainer>
