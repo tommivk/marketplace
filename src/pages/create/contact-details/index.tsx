@@ -38,9 +38,10 @@ const ContactDetailsPage: NextPage = () => {
 
   const { mutate: createItem } = trpc.items.create.useMutation({
     onSuccess: (data) => {
-      reset();
       ctx.items.getAll.invalidate();
       toast.success("New Item Created!");
+      reset();
+      formStore.clearAll();
       router.push(`/items/${data.id}`);
     },
   });
