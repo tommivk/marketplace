@@ -6,6 +6,7 @@ import { createPresignedPOSTLink, fileExists } from "../aws";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Item } from "@prisma/client";
+import { clerkClient } from "@clerk/nextjs/server";
 
 // Allow 2 requests per 5 minutes
 const uploadLinkLimit = new Ratelimit({
@@ -119,11 +120,24 @@ export const itemsRouter = router({
     .query(async ({ ctx, input }) => {
       const item = await ctx.prisma.item.findUnique({
         where: { id: input.itemId },
-        include: { image: true },
+        include: { image: true, contactDetails: true },
       });
       if (!item) throw new TRPCError({ code: "NOT_FOUND" });
 
-      return item;
+      const username = (await clerkClient.users.getUser(item.authorId))
+        .username;
+
+      if (!username) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "No username",
+        });
+      }
+
+      return {
+        ...item,
+        contactDetails: { ...item.contactDetails, username },
+      };
     }),
 
   create: protectedProcedure
@@ -132,12 +146,11 @@ export const itemsRouter = router({
         fileName: z.string().min(1),
         email: z.string().min(1),
         phoneNumber: z.string().min(1),
-        username: z.string().min(1),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
-      const { fileName, email, phoneNumber, username } = input;
+      const { fileName, email, phoneNumber } = input;
 
       const filePath = `${userId}/${fileName}`;
 
@@ -158,7 +171,6 @@ export const itemsRouter = router({
         data: {
           email,
           phoneNumber,
-          username,
         },
       });
 
