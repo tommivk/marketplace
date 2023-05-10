@@ -17,6 +17,7 @@ import { useState } from "react";
 
 const ContactDetailsPage: NextPage = () => {
   const [loading, setLoading] = useState(false);
+
   const ctx = trpc.useContext();
   const formStore = useFormStore();
   const router = useRouter();
@@ -93,16 +94,6 @@ const ContactDetailsPage: NextPage = () => {
         Add Contact Details
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormField>
-          <FormLabel text="Username" />
-          <Input
-            {...register("username")}
-            type="text"
-            placeholder="Username"
-            autoComplete="off"
-          />
-          <ErrorMessage error={errors.username} />
-        </FormField>
         <FormField>
           <FormLabel text="Email" />
           <Input
