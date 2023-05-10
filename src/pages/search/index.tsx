@@ -91,26 +91,28 @@ const SearchPage: NextPage = ({
           </div>
         </form>
 
-        <select
-          defaultValue={"1"}
-          onChange={(e) => {
-            e.preventDefault();
-            router.push({
-              pathname: "/search",
-              query: {
-                query,
-                orderBy: e.target.value,
-                c,
-              },
-            });
-          }}
-          className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
-        >
-          <option value={"1"}>Newest first</option>
-          <option value={"2"}>Oldest first</option>
-          <option value={"3"}>Highest price</option>
-          <option value={"4"}>Lowest price</option>
-        </select>
+        {items && items.length > 0 && (
+          <select
+            defaultValue={"1"}
+            onChange={(e) => {
+              e.preventDefault();
+              router.push({
+                pathname: "/search",
+                query: {
+                  query,
+                  orderBy: e.target.value,
+                  c,
+                },
+              });
+            }}
+            className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
+          >
+            <option value={"1"}>Newest first</option>
+            <option value={"2"}>Oldest first</option>
+            <option value={"3"}>Highest price</option>
+            <option value={"4"}>Lowest price</option>
+          </select>
+        )}
       </div>
       <ItemList items={items} />
     </div>
