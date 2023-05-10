@@ -1,7 +1,6 @@
 import React from "react";
 import CategoryCard from "@/components/CategoryCard";
 import ImageCard from "@/components/ImageCard";
-import Link from "next/link";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
@@ -61,7 +60,6 @@ export default function Home() {
             />
           ))}
         </div>
-        <Link href={"/create"}>Create new listing</Link>
       </div>
     </div>
   );
