@@ -13,6 +13,7 @@ export const useFormStore = create<{
   itemDetails: ItemDetailsType | undefined;
   contactDetails: ContactDetailsType | undefined;
   setData: ({ step, data }: SetDataType) => void;
+  clearAll: () => void;
 }>((set) => ({
   itemDetails: undefined,
   contactDetails: undefined,
@@ -20,5 +21,10 @@ export const useFormStore = create<{
     set((state) => ({
       ...state,
       [step]: data,
+    })),
+  clearAll: () =>
+    set(() => ({
+      itemDetails: undefined,
+      contactDetails: undefined,
     })),
 }));
