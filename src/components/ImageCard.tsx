@@ -24,6 +24,7 @@ const ImageCard = ({ link, imageURL, price, title, content }: Props) => {
             className="rounded-ss-md rounded-se-md object-cover"
             alt={title}
             src={`${imageURL}?w=340`}
+            priority={true}
             fill
           />
         </div>
