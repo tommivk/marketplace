@@ -15,7 +15,18 @@ const Navigation = () => {
 
   return (
     <div className="p-5 h-14 flex items-center justify-between">
-      <Link href={"/"}>Marketplace</Link>
+      <Link href={"/"}>
+        <h1 className="font-extrabold text-2xl tracking-wide text-slate-200">
+          MARKETPLACE
+        </h1>
+      </Link>
+
+      <Link href={"/create"}>
+        <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
+          List New Item
+        </p>
+      </Link>
+
       <SignedOut>
         <Link href={"/register"}>
           <Button>SIGN UP</Button>
