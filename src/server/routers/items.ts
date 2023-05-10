@@ -16,13 +16,13 @@ const uploadLinkLimit = new Ratelimit({
 });
 const createLimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(2, "5 m"),
+  limiter: Ratelimit.slidingWindow(3, "5 m"),
   analytics: true,
 });
 
 const dailyLimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, "1 d"),
+  limiter: Ratelimit.slidingWindow(20, "1 d"),
   analytics: true,
 });
 
