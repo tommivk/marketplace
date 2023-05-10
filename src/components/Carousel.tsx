@@ -33,7 +33,7 @@ const SwiperButtonLeft = () => {
 
 const Carousel = ({ items }: { items?: Item[] }) => {
   return (
-    <div className="m-auto w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px] relative">
+    <div className="m-auto w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px] relative select-none">
       <Swiper
         className="inherit"
         slidesPerView={5}
