@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center mb-20">
-      <div className="mt-48 mb-48">
+      <div className="mt-48 mb-48 max-w-full w-[500px] px-2">
         <h1 className="text-4xl text-center font-extrabold">
           Search For{" "}
           <span className="text-transparent text-4xl bg-clip-text bg-gradient-to-r from-fuchsia-700 to-blue-400">
@@ -43,7 +43,7 @@ export default function Home() {
         </h1>
         <input
           type="text"
-          className="px-4 py-2 w-[500px] max-w-[92vw] rounded-lg mt-20 text-black"
+          className="px-4 py-2 w-full rounded-lg mt-20 text-black"
           placeholder="Search items..."
           autoComplete="off"
           onKeyDown={(e) => {
