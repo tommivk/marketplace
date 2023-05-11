@@ -13,7 +13,9 @@ import TypeWriter from "@/components/TypeWriter";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
-  const { data: categories } = trpc.categories.getAll.useQuery();
+  const { data: categories } = trpc.categories.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
 
   const router = useRouter();
 
