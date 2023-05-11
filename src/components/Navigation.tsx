@@ -14,7 +14,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className="p-5 h-14 flex items-center justify-between">
+    <div className="p-10 h-14 flex items-center justify-between">
       <Link href={"/"}>
         <h1 className="font-extrabold text-2xl tracking-wide text-slate-200">
           MARKETPLACE

@@ -48,15 +48,15 @@ const SearchPage: NextPage = ({
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto p-2">
       <div>
         <form>
-          <div className="flex items-center justify-center mt-20 mb-20 gap-2">
+          <div className="flex flex-wrap items-center justify-center mt-20 mb-20 gap-2">
             <input
               type="text"
               ref={inputRef}
               defaultValue={query}
-              className="px-4 py-2 w-[500px] rounded-lg  text-black m-auto block"
+              className="px-4 py-3 w-[300px] rounded-lg bg-zinc-800 text-slate-200 block text-sm"
               placeholder="Search items..."
               autoComplete="off"
               onKeyDown={(e) => {
@@ -68,26 +68,28 @@ const SearchPage: NextPage = ({
                 }
               }}
             />
-            <select
-              ref={categoryRef}
-              className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-3 py-2 outline-none rounded-md"
-              defaultValue={c}
-            >
-              <option value={""}>All categories</option>
-              {categories?.map(({ id, name }) => (
-                <option key={id} value={name}>
-                  {name}
-                </option>
-              ))}
-            </select>
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                handleSearch(e);
-              }}
-            >
-              Search
-            </Button>
+            <div className="flex gap-2">
+              <select
+                ref={categoryRef}
+                className="block bg-zinc-800 text-slate-200 text-sm px-3 py-3 outline-none rounded-md"
+                defaultValue={c}
+              >
+                <option value={""}>All categories</option>
+                {categories?.map(({ id, name }) => (
+                  <option key={id} value={name}>
+                    {name}
+                  </option>
+                ))}
+              </select>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSearch(e);
+                }}
+              >
+                Search
+              </Button>
+            </div>
           </div>
         </form>
 
@@ -105,7 +107,7 @@ const SearchPage: NextPage = ({
                 },
               });
             }}
-            className="ml-auto block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
+            className="ml-auto mr-2 block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
           >
             <option value={"1"}>Newest first</option>
             <option value={"2"}>Oldest first</option>

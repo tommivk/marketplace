@@ -24,7 +24,7 @@ const ItemPage: NextPage = ({
   return (
     <div className="my-20">
       <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 px-20 py-10 rounded-md">
-        <div className="text-center mb-20">
+        <div className="text-center mb-20 w-full px-4">
           <div className="flex justify-between items-center mb-10">
             <h1 className="text-4xl inline-block">{item.title}</h1>
             <h2 className="text-right text-2xl inline-block">{item.price} €</h2>
@@ -37,12 +37,15 @@ const ItemPage: NextPage = ({
               className="object-contain"
             />
           </div>
-          <p className="m-4">{item.description}</p>
+          <p className="text-left break-words w-96 m-auto">
+            {item.description}
+          </p>
         </div>
 
         <div className="mt-auto">
           <h3 className="text-center mb-5">
-            Listed by: {contactDetails.username}
+            Listed by:{" "}
+            <span className="capitalize">{contactDetails.username}</span>
           </h3>
           <div className="flex flex-wrap justify-center gap-2">
             <Button className="inline-block" color="secondary" disabled>
