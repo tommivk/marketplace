@@ -8,12 +8,29 @@ import { appRouter } from "@/server/root";
 import { prisma } from "@/server/db";
 import superjson from "superjson";
 import Carousel from "@/components/Carousel";
+import ImageCard from "@/components/ImageCard";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
   const { data: categories } = trpc.categories.getAll.useQuery();
 
   const router = useRouter();
+
+  const itemCards = newestItems?.map(
+    ({ id, title, description, price, image: { imageURL } }) => (
+      <ImageCard
+        key={id}
+        link={`/items/${id}`}
+        imageURL={imageURL}
+        title={title}
+        content={description}
+        price={price}
+      />
+    )
+  );
+  const categoryCards = categories?.map((category) => (
+    <CategoryCard category={category} key={category.id} />
+  ));
 
   return (
     <div className="flex flex-col items-center mb-20">
@@ -26,7 +43,7 @@ export default function Home() {
         </h1>
         <input
           type="text"
-          className="px-4 py-2 w-[500px] rounded-lg mt-20 text-black"
+          className="px-4 py-2 w-[500px] max-w-[92vw] rounded-lg mt-20 text-black"
           placeholder="Search items..."
           autoComplete="off"
           onKeyDown={(e) => {
@@ -39,16 +56,14 @@ export default function Home() {
         />
       </div>
 
-      <div>
+      <div className="w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px]">
         <h1 className="font-bold text-2xl ml-2 mb-3">Categories</h1>
-        <div className="flex flex-wrap mb-16">
-          {categories?.map((category) => (
-            <CategoryCard category={category} key={category.id} />
-          ))}
+        <div className="mb-16">
+          <Carousel id={1} slides={categoryCards} />
         </div>
 
         <h1 className="font-bold text-2xl ml-2 mb-3">Newest listings</h1>
-        <Carousel items={newestItems} />
+        <Carousel id={2} slides={itemCards} />
       </div>
     </div>
   );

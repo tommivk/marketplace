@@ -1,21 +1,23 @@
-import { AppRouter } from "@/server/root";
-import { inferRouterOutputs } from "@trpc/server";
-import "swiper/css";
-import "swiper/css/navigation";
-import ImageCard from "./ImageCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Virtual, Navigation } from "swiper";
 
-type RouterOutput = inferRouterOutputs<AppRouter>;
-type Item = RouterOutput["items"]["getNewest"][number];
+import "swiper/css";
+import "swiper/css/navigation";
 
-const SwiperButton = ({ leftButton }: { leftButton?: boolean }) => {
+const SwiperButton = ({
+  leftButton,
+  id,
+}: {
+  leftButton?: boolean;
+  id: number;
+}) => {
   return (
     <button
       className={`
-                ${leftButton ? "button-prev" : "button-next"}
+                ${leftButton ? `button-prev-${id}` : `button-next-${id}`}
                 ${leftButton ? "left-[-50px]" : "right-[-50px]"}
-                disabled:text-zinc-800 disabled:pointer-events-none text-[50px] text-slate-200 z-50 absolute top-[90px] cursor-pointer
+                disabled:text-zinc-800 disabled:pointer-events-none text-[50px]
+                text-slate-200 z-50 absolute top-[90px] cursor-pointer 
               `}
     >
       {leftButton ? "<" : ">"}
@@ -23,25 +25,17 @@ const SwiperButton = ({ leftButton }: { leftButton?: boolean }) => {
   );
 };
 
-const SwiperButtonLeft = () => {
+const Carousel = ({ slides, id }: { slides?: JSX.Element[]; id: number }) => {
   return (
-    <button className="button-prev disabled:text-zinc-800 disabled:pointer-events-none  text-[50px] w-20 h-20 text-slate-200 z-50 absolute left-[-60px] top-[90px] cursor-pointer">
-      {"<"}
-    </button>
-  );
-};
-
-const Carousel = ({ items }: { items?: Item[] }) => {
-  return (
-    <div className="m-auto w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px] relative select-none">
+    <div className="m-auto relative select-none">
       <Swiper
         className="inherit"
         slidesPerView={5}
         modules={[Virtual, Navigation]}
         virtual
         navigation={{
-          nextEl: ".button-next",
-          prevEl: ".button-prev",
+          nextEl: `.button-next-${id}`,
+          prevEl: `.button-prev-${id}`,
         }}
         breakpoints={{
           0: { slidesPerView: 1 },
@@ -51,22 +45,14 @@ const Carousel = ({ items }: { items?: Item[] }) => {
           1280: { slidesPerView: 5 },
         }}
       >
-        {items?.map(
-          ({ id, title, description, price, image: { imageURL } }, index) => (
-            <SwiperSlide key={id} virtualIndex={index}>
-              <ImageCard
-                link={`/items/${id}`}
-                imageURL={imageURL}
-                title={title}
-                content={description}
-                price={price}
-              />
-            </SwiperSlide>
-          )
-        )}
+        {slides?.map((element, index) => (
+          <SwiperSlide key={index} virtualIndex={index}>
+            {element}
+          </SwiperSlide>
+        ))}
       </Swiper>
-      <SwiperButton leftButton />
-      <SwiperButton />
+      <SwiperButton id={id} leftButton />
+      <SwiperButton id={id} />
     </div>
   );
 };
