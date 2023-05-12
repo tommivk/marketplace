@@ -4,6 +4,7 @@ import { z } from "zod";
 
 type ItemDetailsType = z.infer<typeof itemSchemaWithFile>;
 type ContactDetailsType = z.infer<typeof contactDetailsSchema>;
+type ContactOption = "email" | "phone" | "both";
 
 type SetDataType =
   | { step: "itemDetails"; data: ItemDetailsType }
@@ -12,11 +13,14 @@ type SetDataType =
 export const useFormStore = create<{
   itemDetails: ItemDetailsType | undefined;
   contactDetails: ContactDetailsType | undefined;
+  contactOption: ContactOption | undefined;
   setData: ({ step, data }: SetDataType) => void;
+  setContactOptionValue: ({ value }: { value: ContactOption }) => void;
   clearAll: () => void;
 }>((set) => ({
   itemDetails: undefined,
   contactDetails: undefined,
+  contactOption: "email",
   setData: ({ step, data }) =>
     set((state) => ({
       ...state,
@@ -26,5 +30,9 @@ export const useFormStore = create<{
     set(() => ({
       itemDetails: undefined,
       contactDetails: undefined,
+    })),
+  setContactOptionValue: ({ value }) =>
+    set(() => ({
+      contactOption: value,
     })),
 }));
