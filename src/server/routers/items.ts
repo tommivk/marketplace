@@ -7,6 +7,7 @@ import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Item } from "@prisma/client";
 import { clerkClient } from "@clerk/nextjs/server";
+import { getUsersVerifiedEmailAddresses } from "@/server/utils";
 
 // Allow 2 requests per 5 minutes
 const uploadLinkLimit = new Ratelimit({
@@ -144,13 +145,29 @@ export const itemsRouter = router({
     .input(
       itemSchema.extend({
         fileName: z.string().min(1),
-        email: z.string().min(1),
-        phoneNumber: z.string().min(1),
+        email: z.string().email().optional(),
+        phoneNumber: z.string().min(1).optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
       const { fileName, email, phoneNumber } = input;
+
+      if (!email && !phoneNumber)
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Email or phone number must be provided",
+        });
+
+      if (email) {
+        const emailAddresses = await getUsersVerifiedEmailAddresses(userId);
+        if (!emailAddresses.includes(email)) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Invalid email address",
+          });
+        }
+      }
 
       const filePath = `${userId}/${fileName}`;
 

@@ -1,6 +1,6 @@
 import { useFormStore } from "@/store/useFormStore";
 import { trpc } from "@/utils/trpc";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import { contactDetailsSchema } from "../../../schema";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -14,8 +14,12 @@ import FormField from "@/components/FormField";
 import FormLabel from "@/components/FormLabel";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useState } from "react";
+import { getAuth } from "@clerk/nextjs/server";
+import { getUsersVerifiedEmailAddresses } from "@/server/utils";
 
-const ContactDetailsPage: NextPage = () => {
+const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
+  emailAddresses,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const formStore = useFormStore();
@@ -26,6 +30,7 @@ const ContactDetailsPage: NextPage = () => {
     register,
     handleSubmit,
     getValues,
+    reset,
     formState: { errors },
   } = useForm<ContactDetails>({
     resolver: zodResolver(contactDetailsSchema),
@@ -83,32 +88,73 @@ const ContactDetailsPage: NextPage = () => {
     router.push("/create");
   };
 
+  const handleRadioChange = (value: "email" | "phone" | "both") => {
+    reset();
+    formStore.setContactOptionValue({ value });
+  };
+
+  const selected = formStore.contactOption;
+
   return (
     <FormContainer>
       <h1 className="text-xl font-bold text-center mb-8">
         Add Contact Details
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormField>
-          <FormLabel text="Email" />
-          <Input
-            {...register("email")}
-            type="text"
-            placeholder="email"
-            autoComplete="off"
-          />
-          <ErrorMessage error={errors.email} />
-        </FormField>
-        <FormField>
-          <FormLabel text="Phone" />
-          <Input
-            {...register("phoneNumber")}
-            type="text"
-            placeholder="Phone"
-            autoComplete="off"
-          />
-          <ErrorMessage error={errors.phoneNumber} />
-        </FormField>
+        <div className="flex gap-3 justify-center mb-4">
+          <div className="flex flex-col items-center gap-2">
+            <FormLabel text="Email" />
+            <input
+              type="radio"
+              className="m-auto text-center"
+              checked={selected === "email"}
+              onChange={() => handleRadioChange("email")}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <FormLabel text="Phone" />
+            <input
+              type="radio"
+              checked={selected === "phone"}
+              onChange={() => handleRadioChange("phone")}
+            />
+          </div>
+          <div className="flex flex-col items-center gap-2">
+            <FormLabel text="Both" />
+            <input
+              type="radio"
+              checked={selected === "both"}
+              onChange={() => handleRadioChange("both")}
+            />
+          </div>
+        </div>
+
+        {(selected === "email" || selected === "both") && (
+          <FormField>
+            <FormLabel text="Email (not displayed publicly)" />
+            <select className="bg-zinc-800 w-full p-2 " {...register("email")}>
+              {emailAddresses.map((email) => (
+                <option key={email} value={email}>
+                  {email}
+                </option>
+              ))}
+            </select>
+            <ErrorMessage error={errors.email} />
+          </FormField>
+        )}
+
+        {(selected === "phone" || selected === "both") && (
+          <FormField>
+            <FormLabel text="Phone (will be displayed publicly)" />
+            <Input
+              {...register("phoneNumber")}
+              type="text"
+              placeholder="Phone"
+              autoComplete="off"
+            />
+            <ErrorMessage error={errors.phoneNumber} />
+          </FormField>
+        )}
 
         <div className="flex items-center mt-10 justify-between">
           <Button onClick={handleGoBack} type="button" color="secondary">
@@ -121,6 +167,26 @@ const ContactDetailsPage: NextPage = () => {
       </form>
     </FormContainer>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { userId } = getAuth(ctx.req);
+  if (!userId) {
+    return {
+      redirect: {
+        destination: "/login?r=create",
+        permanent: false,
+      },
+    };
+  }
+
+  const emailAddresses = await getUsersVerifiedEmailAddresses(userId);
+
+  return {
+    props: {
+      emailAddresses,
+    },
+  };
 };
 
 export default ContactDetailsPage;
