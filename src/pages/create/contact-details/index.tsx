@@ -22,8 +22,12 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const formStore = useFormStore();
   const router = useRouter();
+
+  const formStore = useFormStore();
+  if (!formStore.itemDetails) {
+    router.push("/create");
+  }
 
   type ContactDetails = z.infer<typeof contactDetailsSchema>;
   const {
@@ -94,6 +98,8 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
   };
 
   const selected = formStore.contactOption;
+
+  if (!formStore.itemDetails) return <></>;
 
   return (
     <FormContainer>
