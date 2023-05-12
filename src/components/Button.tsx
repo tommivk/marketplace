@@ -9,7 +9,7 @@ type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
 const Button = ({ children, loading, color = "primary", ...props }: Props) => {
   const colors = {
     primary: "bg-blue-400 hover:bg-blue-300",
-    secondary: "bg-slate-600 hover:bg-slate-500",
+    secondary: "bg-zinc-800 hover:bg-zinc-700 disabled:text-zinc-700",
     danger: "bg-red-400 hover:bg-red-300",
   };
 
