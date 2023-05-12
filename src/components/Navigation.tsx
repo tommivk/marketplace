@@ -21,11 +21,19 @@ const Navigation = () => {
         </h1>
       </Link>
 
-      <Link href={"/create"}>
-        <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
-          List New Item
-        </p>
-      </Link>
+      <div className="flex gap-10">
+        <Link href={"/search"}>
+          <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
+            Search
+          </p>
+        </Link>
+
+        <Link href={"/create"}>
+          <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
+            List New Item
+          </p>
+        </Link>
+      </div>
 
       <SignedOut>
         <Link href={"/register"}>
