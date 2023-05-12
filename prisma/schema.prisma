@@ -30,8 +30,8 @@ model Item {
 
 model ContactDetails {
   id          String   @id @default(cuid())
-  email       String
-  phoneNumber String
+  email       String?
+  phoneNumber String?
   item        Item[]
 }
 
