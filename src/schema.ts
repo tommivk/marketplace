@@ -29,7 +29,12 @@ export const itemSchemaWithFile = itemSchema.extend({
       : z.instanceof(File, { message: "Image is required" }),
 });
 
-export const contactDetailsSchema = z.object({
-  email: z.string().email(),
-  phoneNumber: z.string().min(1, "Phone number is required"),
-});
+export const contactDetailsSchema = z
+  .object({
+    email: z.string().email(),
+    phoneNumber: z.string().min(2, "Phone number is required"),
+  })
+  .partial()
+  .refine((data) => !!data.email || !!data.phoneNumber, {
+    message: "Phone number or email is required",
+  });
