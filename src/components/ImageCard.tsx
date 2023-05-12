@@ -14,7 +14,7 @@ const ImageCard = ({ link, imageURL, price, title, content }: Props) => {
     <Link href={link}>
       <div className="bg-zinc-900 rounded-md w-[200px] m-2 relative hover:-translate-y-1 duration-100">
         {price && (
-          <p className="absolute font-bold text-right bg-zinc-800 px-1 text-sm rounded-md mt-1 ml-1 right-0 z-10">
+          <p className="absolute font-bold text-right bg-zinc-800 px-1 text-sm rounded-md m-1 right-0 z-10">
             {price}€
           </p>
         )}
@@ -29,8 +29,8 @@ const ImageCard = ({ link, imageURL, price, title, content }: Props) => {
           />
         </div>
 
-        <div className="h-28 py-2 px-4 ">
-          <h2 className="text-left font-medium text-base text-slate-200 mb-1">
+        <div className="h-28 py-2 px-4">
+          <h2 className="text-left font-medium text-base text-slate-200 mb-1 line-clamp-1">
             {title}
           </h2>
           <p className="text-sm text-slate-200 break-words line-clamp-2">

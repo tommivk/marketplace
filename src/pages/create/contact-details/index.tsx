@@ -131,7 +131,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
 
         {(selected === "email" || selected === "both") && (
           <FormField>
-            <FormLabel text="Email (not displayed publicly)" />
+            <FormLabel text="Email (will not be displayed publicly)" />
             <select className="bg-zinc-800 w-full p-2 " {...register("email")}>
               {emailAddresses.map((email) => (
                 <option key={email} value={email}>

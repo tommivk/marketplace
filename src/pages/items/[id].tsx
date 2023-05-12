@@ -22,14 +22,16 @@ const ItemPage: NextPage = ({
   };
 
   return (
-    <div className="my-20">
-      <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 px-20 py-10 rounded-md">
-        <div className="text-center mb-20 w-full px-4">
-          <div className="flex justify-between items-center mb-10">
-            <h1 className="text-4xl inline-block">{item.title}</h1>
+    <div className="my-20 px-4">
+      <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 rounded-md">
+        <div className="w-[500px]  text-center mb-20 px-10 max-w-full py-10 ">
+          <div className="flex flex-wrap gap-2  justify-between items-center mb-10">
+            <h1 className="text-4xl inline-block break-words max-w-full">
+              {item.title}
+            </h1>
             <h2 className="text-right text-2xl inline-block">{item.price} €</h2>
           </div>
-          <div className="w-96 relative h-96 m-auto">
+          <div className="max-w-full relative h-96 m-auto">
             <Image
               alt={item.title}
               src={item.image.imageURL}
@@ -37,9 +39,7 @@ const ItemPage: NextPage = ({
               className="object-contain"
             />
           </div>
-          <p className="text-left break-words w-96 m-auto">
-            {item.description}
-          </p>
+          <p className="text-left break-words m-auto">{item.description}</p>
         </div>
 
         <div className="mt-auto">
@@ -47,13 +47,19 @@ const ItemPage: NextPage = ({
             Listed by:{" "}
             <span className="capitalize">{contactDetails.username}</span>
           </h3>
-          <div className="flex flex-wrap justify-center gap-2">
-            <Button className="inline-block" color="secondary" disabled>
-              Send Email
-            </Button>
+          <div className="flex flex-wrap justify-center gap-4 mb-10">
+            {contactDetails.email && (
+              <Button
+                className="inline-block min-w-[220px]"
+                color="secondary"
+                disabled
+              >
+                Send Email
+              </Button>
+            )}
             {contactDetails.phoneNumber && (
               <Button
-                className="inline-block w-[220px]"
+                className="inline-block min-w-[220px]"
                 color="secondary"
                 onClick={togglePhoneNumber}
               >

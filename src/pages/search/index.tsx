@@ -230,7 +230,7 @@ const ItemList = ({ items }: { items?: Item[] }) => {
           <li key={id} className="my-2 rounded-lg group">
             <Divider />
             <Link href={`/items/${id} `}>
-              <div className="flex">
+              <div className="flex w-full">
                 <ItemImage imageURL={imageURL} />
                 <ItemContent
                   title={title}
@@ -249,11 +249,11 @@ const ItemList = ({ items }: { items?: Item[] }) => {
 
 const ItemImage = ({ imageURL }: { imageURL: string }) => {
   return (
-    <div className="relative overflow-hidden rounded-lg">
+    <div className="min-w-max relative overflow-hidden rounded-lg">
       <Image
         src={imageURL}
-        height={165}
-        width={165}
+        height={150}
+        width={150}
         alt={"item"}
         className="object-cover rounded-lg group-hover:scale-[103%] duration-300 aspect-square"
       />
@@ -277,10 +277,10 @@ const ItemContent = ({
   category: string;
 }) => {
   return (
-    <div className="w-full px-2 ml-2 flex flex-col">
-      <h1 className="text-lg">{title}</h1>
+    <div className="px-2 ml-2 flex flex-col">
+      <h1 className="text-lg break-all">{title}</h1>
       <p className="text-2xl">{price} €</p>
-      <p>{category}</p>
+      <p className="text-zinc-300">{category}</p>
       <p className="mt-auto mb-2 text-xs text-zinc-500">
         {dayjs().to(createdAt)}
       </p>
