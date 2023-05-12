@@ -84,36 +84,58 @@ export const itemsRouter = router({
     .input(
       z.object({
         query: z.string().optional(),
-        orderBy: z.enum(["1", "2", "3", "4"]),
+        orderBy: z.string().optional().default("1"),
         c: z.string().optional(),
+        page: z.number().min(1).optional().default(1),
+        limit: z.number(),
       })
     )
     .query(async ({ ctx, input }) => {
+      const { page, limit } = input;
+
       const orderBy = getOrderbyArgs(input.orderBy);
 
-      const items = await ctx.prisma.item.findMany({
-        where: {
-          OR: [
-            {
-              title: { contains: input.query },
-            },
-            { description: { contains: input.query } },
-          ],
-
-          category: {
-            name: {
-              contains: input.c,
+      const query = await ctx.prisma.$transaction([
+        ctx.prisma.item.count({
+          where: {
+            OR: [
+              {
+                title: { contains: input.query },
+              },
+              { description: { contains: input.query } },
+            ],
+            category: {
+              name: {
+                contains: input.c,
+              },
             },
           },
-        },
-        include: {
-          image: true,
-          category: true,
-        },
-        orderBy,
-      });
+        }),
+        ctx.prisma.item.findMany({
+          take: limit,
+          skip: (page - 1) * limit,
+          where: {
+            OR: [
+              {
+                title: { contains: input.query },
+              },
+              { description: { contains: input.query } },
+            ],
+            category: {
+              name: {
+                contains: input.c,
+              },
+            },
+          },
+          include: {
+            image: true,
+            category: true,
+          },
+          orderBy,
+        }),
+      ]);
 
-      return items;
+      return { searchCount: query[0], items: query[1] };
     }),
 
   findById: procedure
@@ -207,7 +229,7 @@ export const itemsRouter = router({
     }),
 });
 
-const getOrderbyArgs = (order: "1" | "2" | "3" | "4") => {
+const getOrderbyArgs = (order?: string) => {
   const orderBy: Partial<Record<keyof Item, "asc" | "desc">> = {};
 
   switch (order) {

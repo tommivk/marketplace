@@ -16,17 +16,27 @@ import Button from "@/components/Button";
 
 dayjs.extend(relativeTime);
 
-const SearchPage: NextPage = ({
-  query,
-  orderBy,
-  c,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const LIMIT = 20;
+
+type Props = {
+  query: string;
+  orderBy: string;
+  c: string;
+  page: number;
+};
+
+const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
   const { data: categories } = trpc.categories.getAll.useQuery();
-  const { data: items } = trpc.items.search.useQuery({
+  const { data } = trpc.items.search.useQuery({
     query,
     orderBy,
     c,
+    page,
+    limit: LIMIT,
   });
+
+  const items = data?.items;
+  const searchCount = data?.searchCount;
 
   const categoryRef = useRef<HTMLSelectElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,35 +104,113 @@ const SearchPage: NextPage = ({
         </form>
 
         {items && items.length > 0 && (
-          <select
-            defaultValue={"1"}
-            onChange={(e) => {
-              e.preventDefault();
-              router.push({
-                pathname: "/search",
-                query: {
-                  query,
-                  orderBy: e.target.value,
-                  c,
-                },
-              });
-            }}
-            className="ml-auto mr-2 block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
-          >
-            <option value={"1"}>Newest first</option>
-            <option value={"2"}>Oldest first</option>
-            <option value={"3"}>Highest price</option>
-            <option value={"4"}>Lowest price</option>
-          </select>
+          <div className="flex items-center">
+            <p className="ml-2 text-zinc-400">
+              {searchCount} {searchCount === 1 ? "item" : "items"} found
+            </p>
+            <select
+              defaultValue={"1"}
+              onChange={(e) => {
+                e.preventDefault();
+                router.push({
+                  pathname: "/search",
+                  query: {
+                    query,
+                    orderBy: e.target.value,
+                    c,
+                  },
+                });
+              }}
+              className="ml-auto mr-2 block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
+            >
+              <option value={"1"}>Newest first</option>
+              <option value={"2"}>Oldest first</option>
+              <option value={"3"}>Highest price</option>
+              <option value={"4"}>Lowest price</option>
+            </select>
+          </div>
         )}
       </div>
       <ItemList items={items} />
+      <Pagination
+        query={query}
+        orderBy={orderBy}
+        c={c}
+        page={page}
+        searchCount={searchCount}
+      />
+    </div>
+  );
+};
+
+const Pagination = ({
+  searchCount,
+  page,
+  orderBy,
+  c,
+  query,
+}: {
+  searchCount?: number;
+  page: number;
+  orderBy: string;
+  c: string;
+  query: string;
+}) => {
+  const router = useRouter();
+
+  if (!searchCount) return <></>;
+
+  const pages = Math.ceil(searchCount / LIMIT);
+
+  return (
+    <div className="flex justify-between items-center mt-4 mb-10">
+      <Button
+        color="secondary"
+        className="disabled:opacity-0"
+        disabled={page === 1}
+        onClick={() => {
+          router.push({
+            pathname: "/search",
+            query: {
+              query,
+              orderBy,
+              c,
+              page: page - 1,
+            },
+          });
+        }}
+      >
+        Previous Page
+      </Button>
+
+      <p className="text-zinc-400">
+        Page {page}/{pages}
+      </p>
+
+      <Button
+        color="secondary"
+        className="disabled:opacity-0"
+        disabled={page == pages}
+        onClick={() => {
+          router.push({
+            pathname: "/search",
+            query: {
+              query,
+              orderBy,
+              c,
+              page: page + 1,
+            },
+          });
+        }}
+      >
+        Next Page
+      </Button>
     </div>
   );
 };
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type Item = RouterOutput["items"]["search"][number];
+type Item = RouterOutput["items"]["search"]["items"][number];
 
 const ItemList = ({ items }: { items?: Item[] }) => {
   if (items?.length === 0) {
@@ -201,9 +289,9 @@ const ItemContent = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { query = "", orderBy = "1", c = "" } = ctx.query;
+  const { query = "", orderBy = "1", c = "", page = 1 } = ctx.query;
   return {
-    props: { query, orderBy, c },
+    props: { query, orderBy, c, page: Number(page) },
   };
 };
 
