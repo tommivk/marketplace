@@ -31,7 +31,7 @@ const Navigation = () => {
           className={`
                       ${menuOpen ? "" : "hidden md:flex"}
                       absolute top-0 right-0 md:relative md:ml-auto flex-col md:flex-row flex grow items-center
-                      bg-zinc-900 md:bg-transparent rounded-sm p-8 select-none
+                      bg-zinc-900 md:bg-transparent rounded-sm p-8 select-none z-10
                     `}
         >
           <div className="ml-0 md:ml-auto flex flex-col md:flex-row gap-3 md:gap-10 mt-10 md:mt-0 mb-6 md:mb-0">
@@ -76,7 +76,7 @@ const Burger = ({
   return (
     <div
       onClick={() => setMenuOpen(!menuOpen)}
-      className="absolute right-10 top-7 space-y-2 cursor-pointer w-fit md:hidden z-10"
+      className="absolute right-10 top-7 space-y-2 cursor-pointer w-fit md:hidden z-20"
     >
       <div className="w-8 h-0.5 bg-zinc-400"></div>
       <div className="w-8 h-0.5 bg-zinc-400"></div>
