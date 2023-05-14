@@ -10,6 +10,7 @@ import { AppRouter } from "@/server/root";
 import { FormEvent, useRef } from "react";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
+import SearchIcon from "@/components/SearchIcon";
 
 dayjs.extend(relativeTime);
 
@@ -61,22 +62,25 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
       <div>
         <form>
           <div className="flex flex-wrap items-center justify-center mt-20 mb-20 gap-2">
-            <input
-              type="text"
-              ref={inputRef}
-              defaultValue={query}
-              className="px-4 py-3 w-[300px] rounded-lg bg-zinc-800 text-slate-200 block text-sm"
-              placeholder="Search items..."
-              autoComplete="off"
-              onKeyDown={(e) => {
-                const value = (e.target as HTMLInputElement).value.trim();
-                if (value == "") return;
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleSearch(e);
-                }
-              }}
-            />
+            <div className="relative">
+              <SearchIcon className="w-6 h-6 absolute top-2.5 left-2 text-slate-200" />
+              <input
+                type="text"
+                ref={inputRef}
+                defaultValue={query}
+                className="px-11 py-3 w-[300px] rounded-lg bg-zinc-800 text-slate-200 text-sm"
+                placeholder="Search items..."
+                autoComplete="off"
+                onKeyDown={(e) => {
+                  const value = (e.target as HTMLInputElement).value.trim();
+                  if (value == "") return;
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearch(e);
+                  }
+                }}
+              />
+            </div>
             <div className="flex gap-2">
               <select
                 ref={categoryRef}

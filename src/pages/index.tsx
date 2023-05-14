@@ -10,6 +10,7 @@ import superjson from "superjson";
 import Carousel from "@/components/Carousel";
 import ImageCard from "@/components/ImageCard";
 import TypeWriter from "@/components/TypeWriter";
+import SearchIcon from "@/components/SearchIcon";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
@@ -54,19 +55,22 @@ export default function Home() {
           />
         </div>
 
-        <input
-          type="text"
-          className="px-4 py-2 w-full rounded-lg mt-20 text-black"
-          placeholder="Search items..."
-          autoComplete="off"
-          onKeyDown={(e) => {
-            const value = (e.target as HTMLInputElement).value?.trim();
-            if (e.key === "Enter") {
-              if (value === "") return;
-              router.push({ pathname: `/search`, query: { query: value } });
-            }
-          }}
-        />
+        <div className="relative mt-20">
+          <SearchIcon className="w-6 h-6 absolute top-2 left-2 text-slate-800" />
+          <input
+            type="text"
+            className="px-12 py-2 w-full rounded-lg text-black"
+            placeholder="Search items..."
+            autoComplete="off"
+            onKeyDown={(e) => {
+              const value = (e.target as HTMLInputElement).value?.trim();
+              if (e.key === "Enter") {
+                if (value === "") return;
+                router.push({ pathname: `/search`, query: { query: value } });
+              }
+            }}
+          />
+        </div>
       </div>
 
       <div className="w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px]">

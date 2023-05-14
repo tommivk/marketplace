@@ -16,6 +16,7 @@ import ErrorMessage from "@/components/ErrorMessage";
 import { useState } from "react";
 import { getAuth } from "@clerk/nextjs/server";
 import { getUsersVerifiedEmailAddresses } from "@/server/utils";
+import ArrowIcon from "@/components/ArrowIcon";
 
 const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
   emailAddresses,
@@ -107,7 +108,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
         Add Contact Details
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex gap-3 justify-center mb-4">
+        <div className="flex gap-3 justify-center mb-8">
           <div className="flex flex-col items-center gap-2">
             <FormLabel text="Email" />
             <input
@@ -164,7 +165,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
 
         <div className="flex items-center mt-10 justify-between">
           <Button onClick={handleGoBack} type="button" color="secondary">
-            {"<-"}
+            <ArrowIcon className="w-6 h-6 text-zinc-300" />
           </Button>
           <Button type="submit" loading={loading}>
             SUBMIT
