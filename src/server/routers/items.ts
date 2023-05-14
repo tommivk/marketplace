@@ -159,7 +159,11 @@ export const itemsRouter = router({
 
       return {
         ...item,
-        contactDetails: { ...item.contactDetails, username },
+        contactDetails: {
+          ...item.contactDetails,
+          username,
+          email: !!item.contactDetails.email,
+        },
       };
     }),
 

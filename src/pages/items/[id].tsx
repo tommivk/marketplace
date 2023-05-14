@@ -1,4 +1,4 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import { GetStaticProps, NextPage } from "next";
 import { appRouter } from "@/server/root";
 import { prisma } from "@/server/db";
 import { createServerSideHelpers } from "@trpc/react-query/server";
@@ -7,12 +7,18 @@ import { trpc } from "@/utils/trpc";
 import Image from "next/image";
 import Button from "@/components/Button";
 import { useState } from "react";
+import EmailModal from "@/components/EmailModal";
 
-const ItemPage: NextPage = ({
-  itemId,
-}: InferGetStaticPropsType<typeof getStaticProps>) => {
+type Props = {
+  itemId: string;
+};
+
+const ItemPage: NextPage<Props> = ({ itemId }) => {
   const [showNumber, setShowNumber] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+
   const { data: item } = trpc.items.findById.useQuery({ itemId });
+
   if (!item) return <div>404</div>;
 
   const contactDetails = item.contactDetails;
@@ -23,6 +29,11 @@ const ItemPage: NextPage = ({
 
   return (
     <div className="my-20 px-4">
+      <EmailModal
+        itemId={itemId}
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+      />
       <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 rounded-md">
         <div className="w-[500px]  text-center mb-20 px-10 max-w-full py-10 ">
           <div className="flex flex-wrap gap-2  justify-between items-center mb-10">
@@ -52,7 +63,7 @@ const ItemPage: NextPage = ({
               <Button
                 className="inline-block min-w-[220px]"
                 color="secondary"
-                disabled
+                onClick={() => setModalOpen(true)}
               >
                 Send Email
               </Button>
