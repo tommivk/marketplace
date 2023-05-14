@@ -10,6 +10,9 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  env: {
+    IMGIX_BASE_URL: process.env.IMGIX_BASE_URL,
   }
 }
 
