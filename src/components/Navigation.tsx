@@ -17,7 +17,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className="p-10 h-14 flex items-center">
+    <div className="p-10 h-14 flex items-center z-10">
       <Link href={"/"}>
         <h1 className="font-extrabold text-2xl tracking-wide text-slate-200">
           MARKETPLACE
