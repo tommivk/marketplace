@@ -16,6 +16,7 @@ import FormLabel from "@/components/FormLabel";
 import FormContainer from "@/components/FormContainer";
 import { GetServerSideProps } from "next";
 import { getAuth } from "@clerk/nextjs/server";
+import Loading from "@/components/Loading";
 
 type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
@@ -40,7 +41,7 @@ const ItemForm = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (

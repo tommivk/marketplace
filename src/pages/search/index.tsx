@@ -1,9 +1,5 @@
 import { trpc } from "@/utils/trpc";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,6 +9,7 @@ import { inferRouterOutputs } from "@trpc/server";
 import { AppRouter } from "@/server/root";
 import { FormEvent, useRef } from "react";
 import Button from "@/components/Button";
+import Loading from "@/components/Loading";
 
 dayjs.extend(relativeTime);
 
@@ -27,7 +24,7 @@ type Props = {
 
 const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
   const { data: categories } = trpc.categories.getAll.useQuery();
-  const { data } = trpc.items.search.useQuery({
+  const { data, isLoading } = trpc.items.search.useQuery({
     query,
     orderBy,
     c,
@@ -56,6 +53,8 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
       },
     });
   };
+
+  if (isLoading) return <Loading />;
 
   return (
     <div className="max-w-2xl mx-auto p-2">

@@ -12,6 +12,17 @@ module.exports = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      keyframes: {
+        loading: {
+          "100%": {
+            translate: "0 -100%",
+            opacity: "0.1",
+          }
+        }
+      },
+      animation: {
+        loader: "loading 0.6s infinite alternate"
+      }
     },
   },
   plugins: [],
