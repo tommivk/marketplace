@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import FormContainer from "@/components/FormContainer";
 import FormField from "@/components/FormField";
-import Input from "@/components/Input";
+import Input from "@/components/FormInput";
 import { trpc } from "@/utils/trpc";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";

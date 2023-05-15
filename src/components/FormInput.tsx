@@ -6,7 +6,7 @@ type Props = {
 } & React.InputHTMLAttributes<HTMLInputElement>;
 
 // eslint-disable-next-line react/display-name
-const Input = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
+const FormInput = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
   return (
     <input
       {...props}
@@ -21,4 +21,4 @@ const Input = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
   );
 });
 
-export default Input;
+export default FormInput;

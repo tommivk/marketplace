@@ -7,7 +7,7 @@ import { itemSchemaWithFile } from "../../schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useFormStore } from "@/store/useFormStore";
-import Input from "@/components/Input";
+import Input from "@/components/FormInput";
 import SelectField from "@/components/SelectField";
 import DropZoneField from "@/components/DropZoneField";
 import FormField from "@/components/FormField";
