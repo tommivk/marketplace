@@ -1,38 +1,25 @@
 import { z } from "zod";
 import { procedure, protectedProcedure, router } from "../trpc";
 import { TRPCError } from "@trpc/server";
-import { itemSchema } from "@/schema";
+import { itemSchema } from "../../schema";
 import { createPresignedPOSTLink, fileExists } from "../aws";
-import { Redis } from "@upstash/redis";
-import { Ratelimit } from "@upstash/ratelimit";
 import { Item } from "@prisma/client";
 import { clerkClient } from "@clerk/nextjs/server";
-import { getUsersVerifiedEmailAddresses } from "@/server/utils";
-
-// Allow 2 requests per 5 minutes
-const uploadLinkLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(2, "5 m"),
-  analytics: true,
-});
-const createLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(3, "5 m"),
-  analytics: true,
-});
-
-const dailyLimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(20, "1 d"),
-  analytics: true,
-});
+import { getUsersVerifiedEmailAddresses } from "../utils";
+import {
+  uploadLinkLimit,
+  dailyUploadLimit,
+  createItemLimit,
+} from "../ratelimit";
 
 export const itemsRouter = router({
   createUploadURL: protectedProcedure
     .input(z.object({ contentLength: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const { success } = await uploadLinkLimit.limit(ctx.userId);
-      const { success: dailySuccess } = await dailyLimit.limit(ctx.userId);
+      const { success: dailySuccess } = await dailyUploadLimit.limit(
+        ctx.userId
+      );
       if (!success) {
         throw new TRPCError({
           code: "TOO_MANY_REQUESTS",
@@ -207,7 +194,7 @@ export const itemsRouter = router({
 
       const filePath = `${userId}/${fileName}`;
 
-      const { success } = await createLimit.limit(userId);
+      const { success } = await createItemLimit.limit(userId);
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
 
       const validImage = await fileExists(filePath);
