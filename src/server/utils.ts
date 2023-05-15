@@ -9,3 +9,10 @@ export const getUsersVerifiedEmailAddresses = async (userId: string) => {
   const emailAddresses = verifiedAddresses.map((email) => email.emailAddress);
   return emailAddresses;
 };
+
+export const getUserByUserName = async (username: string) => {
+  const userList = await clerkClient.users.getUserList({
+    username: [username],
+  });
+  return userList[0];
+};

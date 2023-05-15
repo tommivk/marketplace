@@ -80,6 +80,16 @@ export const itemsRouter = router({
     return items;
   }),
 
+  getItemsByUser: procedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const items = await ctx.prisma.item.findMany({
+        where: { authorId: input.userId },
+        include: { image: true },
+      });
+      return items;
+    }),
+
   search: procedure
     .input(
       z.object({

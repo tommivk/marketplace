@@ -8,6 +8,7 @@ import Image from "next/image";
 import Button from "@/components/Button";
 import { useState } from "react";
 import EmailModal from "@/components/EmailModal";
+import Link from "next/link";
 
 type Props = {
   itemId: string;
@@ -56,7 +57,12 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
         <div className="mt-auto">
           <h3 className="text-center mb-5">
             Listed by:{" "}
-            <span className="capitalize">{contactDetails.username}</span>
+            <Link
+              href={`/users/${contactDetails.username}`}
+              className="capitalize text-blue-600 underline"
+            >
+              {contactDetails.username}
+            </Link>
           </h3>
           <div className="flex flex-wrap justify-center gap-4 mb-10">
             {contactDetails.email && (

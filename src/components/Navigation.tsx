@@ -7,7 +7,7 @@ import Link from "next/link";
 const Navigation = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { signOut } = useClerk();
+  const { signOut, user } = useClerk();
   const router = useRouter();
 
   const handleSignout = async (e: React.MouseEvent<HTMLElement>) => {
@@ -35,16 +35,14 @@ const Navigation = () => {
                     `}
         >
           <div className="ml-0 md:ml-auto flex flex-col md:flex-row gap-3 md:gap-10 mt-10 md:mt-0 mb-6 md:mb-0">
-            <Link href={"/search"}>
-              <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
-                Search
-              </p>
-            </Link>
-            <Link href={"/create"}>
-              <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
-                List New Item
-              </p>
-            </Link>
+            <NavigationLink href="/search" text="Search" />
+            {user && (
+              <NavigationLink
+                href={`/users/${user.username}`}
+                text="Your items"
+              />
+            )}
+            <NavigationLink href="/create" text="List New Item" />
           </div>
 
           <div className="ml-auto min-w-[140px]">
@@ -63,6 +61,16 @@ const Navigation = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+const NavigationLink = ({ href, text }: { href: string; text: string }) => {
+  return (
+    <Link href={href}>
+      <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
+        {text}
+      </p>
+    </Link>
   );
 };
 
