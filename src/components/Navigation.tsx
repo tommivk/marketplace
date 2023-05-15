@@ -47,7 +47,7 @@ const Navigation = () => {
             </Link>
           </div>
 
-          <div className="ml-auto">
+          <div className="ml-auto min-w-[140px]">
             <SignedOut>
               <Link href={"/register"}>
                 <Button>SIGN UP</Button>
