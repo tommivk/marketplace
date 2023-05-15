@@ -21,30 +21,3 @@ body {
   background: #121212;
   color: white;
 }
-
-.typewriter {
-  width: 0px;
-  color: transparent;
-  max-width: fit-content;
-  background-clip: text;
-  border-right: 1px solid white;
-  animation: type 2s steps(40, end) 2 alternate, blink 2s infinite ease-in-out;
-}
-
-@keyframes type {
-  0% {
-    width: 0;
-  }
-  100% {
-    width: 300px;
-  }
-}
-
-@keyframes blink {
-  0% {
-    border-right: 1px solid white;
-  }
-  50% {
-    border-color: transparent;
-  }
-}

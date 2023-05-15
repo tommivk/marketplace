@@ -18,10 +18,27 @@ module.exports = {
             translate: "0 -100%",
             opacity: "0.1",
           }
+        },
+        blink: {
+          "0%": {
+            borderRight: "1px solid white",
+          },
+          "50%": {
+            borderColor: "transparent",
+          }
+        },
+        type: {
+          "0%": {
+            width: 0,
+          },
+          "100%": {
+            width: "300px",
+          }
         }
       },
       animation: {
-        loader: "loading 0.6s infinite alternate"
+        loader: "loading 0.6s infinite alternate",
+        typewriter: "type 2s steps(40, end) 2 alternate, blink 2s infinite ease-in-out",
       }
     },
   },

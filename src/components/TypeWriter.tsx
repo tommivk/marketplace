@@ -24,7 +24,10 @@ const TypeWriter = ({ words, className }: Props) => {
   }, [handleUpdate]);
 
   return (
-    <h1 key={index} className={`typewriter ${className}`}>
+    <h1
+      key={index}
+      className={`animate-typewriter w-0 text-transparent max-w-fit bg-clip-text ${className}`}
+    >
       {words[index]}
     </h1>
   );
