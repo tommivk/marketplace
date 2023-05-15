@@ -49,10 +49,7 @@ export default function Home() {
       <div className="mt-48 mb-48 max-w-full w-[500px] px-2">
         <div className="relative flex flex-col sm:flex-row gap-3 flex-wrap sm:ml-14">
           <h1 className="text-4xl text-center font-extrabold">Search For </h1>
-          <TypeWriter
-            words={words}
-            className="text-4xl text-center font-extrabold m-auto sm:ml-0 bg-gradient-to-r from-fuchsia-700 to-blue-400"
-          />
+          <TypeWriter words={words} />
         </div>
 
         <div className="relative mt-20">

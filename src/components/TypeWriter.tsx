@@ -5,7 +5,7 @@ type Props = {
   className?: string;
 };
 
-const TypeWriter = ({ words, className }: Props) => {
+const TypeWriter = ({ words }: Props) => {
   const [index, setIndex] = useState(0);
 
   const handleUpdate = useCallback(() => {
@@ -26,7 +26,9 @@ const TypeWriter = ({ words, className }: Props) => {
   return (
     <h1
       key={index}
-      className={`animate-typewriter w-0 text-transparent max-w-fit bg-clip-text ${className}`}
+      className={`animate-typewriter w-0 text-transparent max-w-fit text-4xl text-center font-extrabold m-auto sm:ml-0
+                  bg-clip-text bg-gradient-to-r from-fuchsia-700 to-blue-400
+                `}
     >
       {words[index]}
     </h1>
