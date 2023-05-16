@@ -20,7 +20,7 @@ jobs:
         run: sleep 5
         shell: bash
       - name: run tests
-        run: DATABASE_URL="mysql://root:test@localhost:3306/tests" UPSTASH_REDIS_REST_URL="test" UPSTASH_REDIS_REST_TOKEN="test" npm run test
+        run: npm run test
 
   Deploy-Production:
     needs: tests
