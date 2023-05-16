@@ -21,18 +21,7 @@ jest.mock("@clerk/nextjs/server", () => ({
   },
 }));
 
-jest.mock("../ratelimit", () => ({
-  createLimit: {
-    limit: jest.fn(() => ({
-      success: true,
-    })),
-  },
-  dailyLimit: {
-    limit: jest.fn(() => ({
-      success: true,
-    })),
-  },
-}));
+jest.mock("@upstash/ratelimit");
 
 jest.mock("../aws", () => ({
   fileExists: jest.fn(() => true),

@@ -2,6 +2,8 @@ import { appRouter } from "../root";
 import { prisma } from "../db";
 import { TRPCError } from "@trpc/server";
 
+jest.mock("@upstash/ratelimit");
+
 const user = {
   username: "test user",
   emailAddresses: [
