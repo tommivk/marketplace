@@ -17,7 +17,7 @@ jobs:
       - name: Docker compose up
         run: npm run docker:up
       - name: run tests
-        run: npm run test
+        run: DATABASE_URL="mysql://root:test@localhost:3306/tests" npm run test
 
   Deploy-Production:
     needs: tests
