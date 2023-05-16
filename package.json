@@ -12,8 +12,7 @@
     "lint": "next lint",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "prisma:migrate": "dotenv -e .env.test -- prisma migrate deploy",
-    "test": "npm run docker:up && npm run prisma:migrate && dotenv -e .env.test -- jest"
+    "test": "dotenv -e .env.test -- npm run docker:up && sleep 5 && prisma migrate dev && jest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.326.0",
