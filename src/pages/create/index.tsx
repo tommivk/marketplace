@@ -92,6 +92,7 @@ const ItemForm = () => {
             type="number"
             placeholder="Price"
             autoComplete="off"
+            min={0}
           />
           <ErrorMessage error={errors.price} />
         </FormField>
