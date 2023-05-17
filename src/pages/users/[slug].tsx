@@ -28,6 +28,9 @@ const UserPage: NextPage<Props> = ({ username, userId }) => {
           </>
         )}
       </h1>
+      {data && data?.length === 0 && (
+        <p className="text-center">You have not listed any items yet</p>
+      )}
       <div className="flex flex-wrap gap-2 justify-center">
         {data?.map(({ id, title, description, price, image: { imageURL } }) => (
           <ImageCard
