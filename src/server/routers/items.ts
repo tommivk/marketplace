@@ -228,6 +228,21 @@ export const itemsRouter = router({
 
       return item;
     }),
+
+  delete: protectedProcedure
+    .input(z.object({ itemId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const item = await ctx.prisma.item.findUnique({
+        where: { id: input.itemId },
+      });
+      if (!item) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+      if (item.authorId !== ctx.userId) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+      await ctx.prisma.item.delete({ where: { id: input.itemId } });
+    }),
 });
 
 const getOrderbyArgs = (order?: string) => {
