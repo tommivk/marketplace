@@ -12,6 +12,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useClerk } from "@clerk/nextjs";
+import Head from "next/head";
 
 type Props = {
   itemId: string;
@@ -59,6 +60,10 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       />
+
+      <Head>
+        <title>{item.title}</title>
+      </Head>
 
       <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 rounded-md">
         <div className="w-[800px] text-center mb-10 px-3 sm:px-10 max-w-full py-10">

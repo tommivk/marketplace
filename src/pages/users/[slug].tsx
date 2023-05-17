@@ -7,6 +7,7 @@ import { getUserByUserName } from "@/server/utils";
 import { useClerk } from "@clerk/nextjs";
 import superjson from "superjson";
 import ImageCard from "@/components/ImageCard";
+import Head from "next/head";
 
 type Props = {
   username: string;
@@ -19,6 +20,9 @@ const UserPage: NextPage<Props> = ({ username, userId }) => {
 
   return (
     <div className="max-w-7xl m-auto">
+      <Head>
+        <title>{user?.username}</title>
+      </Head>
       <h1 className="text-2xl text-center m-10 font-bold">
         {username === user?.username ? (
           "Your items"

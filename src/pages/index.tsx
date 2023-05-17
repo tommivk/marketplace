@@ -11,6 +11,7 @@ import Carousel from "@/components/Carousel";
 import ImageCard from "@/components/ImageCard";
 import TypeWriter from "@/components/TypeWriter";
 import SearchIcon from "@/components/SearchIcon";
+import Head from "next/head";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
@@ -46,6 +47,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center mb-20">
+      <Head>
+        <title>Marketplace</title>
+      </Head>
       <div className="mt-48 mb-48 max-w-full w-[500px] px-2">
         <div className="relative flex flex-col sm:flex-row gap-3 flex-wrap sm:ml-14">
           <h1 className="text-4xl text-center font-extrabold">Search For </h1>

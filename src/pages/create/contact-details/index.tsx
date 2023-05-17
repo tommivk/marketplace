@@ -17,6 +17,7 @@ import { useState } from "react";
 import { getAuth } from "@clerk/nextjs/server";
 import { getUsersVerifiedEmailAddresses } from "@/server/utils";
 import ArrowIcon from "@/components/ArrowIcon";
+import Head from "next/head";
 
 const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
   emailAddresses,
@@ -104,6 +105,9 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
 
   return (
     <FormContainer>
+      <Head>
+        <title>List new Item</title>
+      </Head>
       <h1 className="text-xl font-bold text-center mb-8">
         Add Contact Details
       </h1>

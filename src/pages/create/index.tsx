@@ -17,6 +17,7 @@ import FormContainer from "@/components/FormContainer";
 import { GetServerSideProps } from "next";
 import { getAuth } from "@clerk/nextjs/server";
 import Loading from "@/components/Loading";
+import Head from "next/head";
 
 type ItemSchemaWithFile = z.infer<typeof itemSchemaWithFile>;
 
@@ -46,6 +47,9 @@ const ItemForm = () => {
 
   return (
     <FormContainer>
+      <Head>
+        <title>List new Item</title>
+      </Head>
       <h1 className="text-xl font-bold text-center mb-8">List New Item</h1>
       <form
         className="flex flex-col gap-2 justify-center"

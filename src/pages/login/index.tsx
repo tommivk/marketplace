@@ -4,12 +4,16 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import Head from "next/head";
 
 const LoginPage: NextPage = ({
   redirectURL,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   return (
     <div className="h-full flex justify-center items-center">
+      <Head>
+        <title>Sign in</title>
+      </Head>
       <SignIn signUpUrl="/register" redirectUrl={redirectURL} />
     </div>
   );

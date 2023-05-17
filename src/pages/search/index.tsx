@@ -11,6 +11,7 @@ import { FormEvent, useRef } from "react";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import SearchIcon from "@/components/SearchIcon";
+import Head from "next/head";
 
 dayjs.extend(relativeTime);
 
@@ -59,6 +60,9 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
 
   return (
     <div className="max-w-2xl mx-auto p-2">
+      <Head>
+        <title>Search</title>
+      </Head>
       <div>
         <form>
           <div className="flex flex-wrap items-center justify-center mt-20 mb-20 gap-2">
