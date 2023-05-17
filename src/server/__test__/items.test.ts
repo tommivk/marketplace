@@ -111,6 +111,10 @@ describe("Item tests", () => {
         email: "",
       })
     ).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
+
+    await expect(caller.items.delete({ itemId: "1" })).rejects.toThrow(
+      new TRPCError({ code: "UNAUTHORIZED" })
+    );
   });
 
   it("getAll returns correct data", async () => {
@@ -150,6 +154,35 @@ describe("Item tests", () => {
         message: "Email or phone number must be provided",
       })
     );
+  });
+
+  it("Should be possible to delete item created by the user", async () => {
+    const { id: imageId } = await prisma.image.create({
+      data: { authorId: "1337", imageURL: "/" },
+    });
+    const input = itemData[0];
+    const { id: itemId } = await prisma.item.create({
+      data: { ...input, imageId, authorId: "1337" },
+    });
+    await expect(
+      callerWithUserId.items.delete({ itemId })
+    ).resolves.not.toThrow();
+    const item = await prisma.item.findUnique({ where: { id: itemId } });
+    expect(item).toBeNull();
+  });
+
+  it("Should not be possible to delete item created by someone else", async () => {
+    const item = await prisma.item.findFirst({ where: { authorId: "1" } });
+    expect(item).toBeTruthy();
+    await expect(
+      callerWithUserId.items.delete({ itemId: item!.id })
+    ).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
+  });
+
+  it("Deleting item that does not exist should throw", async () => {
+    await expect(
+      callerWithUserId.items.delete({ itemId: "9000" })
+    ).rejects.toThrow(new TRPCError({ code: "NOT_FOUND" }));
   });
 });
 
