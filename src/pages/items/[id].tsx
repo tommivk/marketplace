@@ -43,15 +43,18 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
             </h1>
             <h2 className="text-right text-2xl inline-block">{item.price} €</h2>
           </div>
-          <div className="max-w-full relative h-96 m-auto">
-            <Image
-              alt={item.title}
-              src={item.image.imageURL}
-              fill
-              className="object-contain"
-            />
-          </div>
-          <p className="text-left break-words m-auto">{item.description}</p>
+          <Image
+            alt={item.title}
+            src={item.image.imageURL}
+            width={500}
+            height={0}
+            priority={true}
+            placeholder="empty"
+            className="w-full h-auto object-contain"
+          />
+          <p className="text-left break-words mt-10 mx-auto">
+            {item.description}
+          </p>
         </div>
 
         <div className="mt-auto">
