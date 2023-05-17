@@ -20,6 +20,4 @@ body,
 body {
   background: #121212;
   color: white;
-  width: calc(100vw - 34px);
-  padding-left: 34px;
 }

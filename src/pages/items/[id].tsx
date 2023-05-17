@@ -29,19 +29,21 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
   };
 
   return (
-    <div className="my-20 px-4">
+    <div className="my-10 sm:my-20 px-4">
       <EmailModal
         itemId={itemId}
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
       />
       <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 rounded-md">
-        <div className="w-[500px]  text-center mb-20 px-10 max-w-full py-10 ">
-          <div className="flex flex-wrap gap-2  justify-between items-center mb-10">
-            <h1 className="text-4xl inline-block break-words max-w-full">
+        <div className="w-[800px] text-center mb-10 px-3 sm:px-10 max-w-full py-10">
+          <div className="flex justify-between items-center mb-10 px-4">
+            <h1 className="text-left text-lg sm:text-3xl break-words">
               {item.title}
             </h1>
-            <h2 className="text-right text-2xl inline-block">{item.price} €</h2>
+            <h2 className="ml-4 text-lg sm:text-2xl min-w-fit mt-1 self-start text-zinc-400">
+              {item.price} €
+            </h2>
           </div>
           <Image
             alt={item.title}
@@ -52,7 +54,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
             placeholder="empty"
             className="w-full h-auto object-contain"
           />
-          <p className="text-left break-words mt-10 mx-auto">
+          <p className="text-left text-sm sm:text-base break-words mt-10 mx-auto px-4">
             {item.description}
           </p>
         </div>

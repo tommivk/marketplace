@@ -17,7 +17,7 @@ const Navigation = () => {
   };
 
   return (
-    <div className="py-10 px-2 h-14 flex items-center z-10">
+    <div className="w-[calc(100vw-32px)] pl-8 py-10  h-14 flex items-center z-10">
       <Link href={"/"}>
         <h1 className="font-extrabold text-2xl tracking-wide text-slate-200">
           MARKETPLACE
@@ -31,7 +31,7 @@ const Navigation = () => {
           className={`
                       ${menuOpen ? "" : "hidden md:flex"}
                       absolute top-0 right-0 md:relative md:ml-auto flex-col md:flex-row flex grow items-center
-                      bg-zinc-900 md:bg-transparent rounded-sm p-8 select-none z-10
+                      bg-zinc-900 md:bg-transparent rounded-sm p-8 md:p-0 select-none z-10
                     `}
         >
           <div className="ml-0 md:ml-auto flex flex-col md:flex-row gap-3 md:gap-10 mt-10 md:mt-0 mb-6 md:mb-0">
