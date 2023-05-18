@@ -56,8 +56,6 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
     });
   };
 
-  if (isLoading) return <Loading />;
-
   return (
     <div className="max-w-2xl mx-auto p-2">
       <Head>
@@ -138,14 +136,20 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
           </div>
         )}
       </div>
-      <ItemList items={items} />
-      <Pagination
-        query={query}
-        orderBy={orderBy}
-        c={c}
-        page={page}
-        searchCount={searchCount}
-      />
+      {isLoading ? (
+        <Loading className="mt-40" />
+      ) : (
+        <>
+          <ItemList items={items} />
+          <Pagination
+            query={query}
+            orderBy={orderBy}
+            c={c}
+            page={page}
+            searchCount={searchCount}
+          />
+        </>
+      )}
     </div>
   );
 };
@@ -221,7 +225,7 @@ type Item = RouterOutput["items"]["search"]["items"][number];
 
 const ItemList = ({ items }: { items?: Item[] }) => {
   if (items?.length === 0) {
-    return <p className="text-center mt-20">No items found</p>;
+    return <p className="text-center mt-40">No items found</p>;
   }
   return (
     <ul className="max-w-2xl p-2 m-auto">
