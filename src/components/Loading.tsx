@@ -1,6 +1,8 @@
-const Loading = () => {
+const Loading = ({ className }: { className?: string }) => {
   return (
-    <div className="h-full flex gap-2 justify-center items-center">
+    <div
+      className={`h-full flex gap-2 justify-center items-center ${className}`}
+    >
       <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full"></span>
       <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full animation-delay-200"></span>
       <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full animation-delay-400 "></span>
