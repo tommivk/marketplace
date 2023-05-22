@@ -114,7 +114,7 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
               {searchCount} {searchCount === 1 ? "item" : "items"} found
             </p>
             <select
-              defaultValue={"1"}
+              defaultValue={orderBy ?? "1"}
               onChange={(e) => {
                 e.preventDefault();
                 router.push({
