@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useCallback, useEffect } from "react";
 
 type Props = {
@@ -35,4 +36,4 @@ const TypeWriter = ({ words }: Props) => {
   );
 };
 
-export default TypeWriter;
+export default React.memo(TypeWriter);
