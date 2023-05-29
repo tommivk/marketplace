@@ -51,7 +51,7 @@ export default function Home() {
         <title>Marketplace</title>
       </Head>
       <div className="mt-48 mb-48 max-w-full w-[500px] px-2">
-        <div className="relative flex flex-col sm:flex-row gap-3 flex-wrap sm:ml-14">
+        <div className="relative flex flex-col sm:flex-row gap-3 flex-wrap sm:ml-14 select-none">
           <h1 className="text-4xl text-center font-extrabold">Search For </h1>
           <TypeWriter words={words} />
         </div>
