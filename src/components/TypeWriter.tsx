@@ -23,7 +23,7 @@ const TypeWriter = ({ words }: Props) => {
 
       if (
         previousSecondRef.current !== second &&
-        second >= 5 &&
+        second !== startTimeRef.current &&
         (second - startTimeRef.current) % 5 === 0
       ) {
         if (index + 1 < words.length) {
