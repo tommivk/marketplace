@@ -15,7 +15,7 @@ import Head from "next/head";
 
 dayjs.extend(relativeTime);
 
-const LIMIT = 20;
+const LIMIT = 8;
 
 type Props = {
   query: string;
