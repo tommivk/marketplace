@@ -16,8 +16,8 @@ const SwiperButton = ({
       className={`
                 ${leftButton ? `button-prev-${id}` : `button-next-${id}`}
                 ${leftButton ? "left-[-50px]" : "right-[-50px]"}
-                disabled:text-zinc-800 disabled:pointer-events-none text-[50px]
-                text-slate-200 absolute top-[90px] cursor-pointer
+                absolute top-[90px] cursor-pointer
+                text-[50px] text-slate-200 disabled:pointer-events-none disabled:text-zinc-800
               `}
     >
       {leftButton ? "<" : ">"}
@@ -27,7 +27,7 @@ const SwiperButton = ({
 
 const Carousel = ({ slides, id }: { slides?: JSX.Element[]; id: number }) => {
   return (
-    <div className="m-auto relative select-none">
+    <div className="relative m-auto select-none">
       <Swiper
         className="inherit"
         slidesPerView={5}

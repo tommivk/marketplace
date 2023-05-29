@@ -9,7 +9,7 @@ const ErrorMessage = ({
 }) => {
   if (!error) return <></>;
   return (
-    <p className={`text-xs text-red-500 mt-2 ml-1 ${className}`}>
+    <p className={`ml-1 mt-2 text-xs text-red-500 ${className}`}>
       {error.message}
     </p>
   );

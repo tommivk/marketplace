@@ -7,13 +7,13 @@ const NotFound = () => {
     return src;
   };
   return (
-    <div className="text-gray-400 select-none">
+    <div className="select-none text-gray-400">
       <Image src={`${BASE_URL}/404.gif`} alt="Not found" fill loader={loader} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-        <h1 className="text-[100px] md:text-[350px] font-semibold leading-none">
+      <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+        <h1 className="text-[100px] font-semibold leading-none md:text-[350px]">
           404
         </h1>
-        <p className="text-xl font-semibold mt-3">Not Found</p>
+        <p className="mt-3 text-xl font-semibold">Not Found</p>
       </div>
     </div>
   );

@@ -71,13 +71,13 @@ const DropZone = ({
             alt="Preview"
             width={200}
             height={300}
-            className="object-contain h-auto max-w-full"
+            className="h-auto max-w-full object-contain"
           />
           <button
-            className={`w-7 h-7 absolute -top-3 -right-4 z-10 
-                        bg-zinc-800 hover:bg-zinc-700 p-1 
-                          rounded-full flex justify-center 
-                          items-center font-bold text-xs
+            className={`absolute -right-4 -top-3 z-10 flex h-7
+                        w-7 items-center justify-center
+                          rounded-full bg-zinc-800 p-1
+                          text-xs font-bold hover:bg-zinc-700
                         `}
             onClick={removePicture}
           >
@@ -87,16 +87,16 @@ const DropZone = ({
       ) : (
         <div
           {...getRootProps()}
-          className="p-10 rounded-md bg-zinc-800 m-auto relative flex items-center"
+          className="relative m-auto flex items-center rounded-md bg-zinc-800 p-10"
         >
           <input {...getInputProps()} />
           <>
-            <div className="flex flex-col items-center text-sm m-auto gap-2 cursor-pointer">
+            <div className="m-auto flex cursor-pointer flex-col items-center gap-2 text-sm">
               <p>Drag Image To Upload</p>
               <p>or</p>
               <span
                 role="button"
-                className="bg-zinc-500 hover:bg-zinc-400 rounded-md p-1"
+                className="rounded-md bg-zinc-500 p-1 hover:bg-zinc-400"
                 onClick={open}
               >
                 Browse Files

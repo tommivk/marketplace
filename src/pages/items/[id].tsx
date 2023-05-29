@@ -51,7 +51,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
   };
 
   return (
-    <div className="my-10 sm:my-20 px-4 pb-20">
+    <div className="my-10 px-4 pb-20 sm:my-20">
       <EmailModal
         itemId={itemId}
         modalOpen={modalOpen}
@@ -62,13 +62,13 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
         <title>{item.title}</title>
       </Head>
 
-      <div className="flex flex-col items-center max-w-2xl m-auto h-full bg-zinc-900 rounded-md">
-        <div className="w-[800px] text-center mb-10 px-3 sm:px-10 max-w-full py-10">
-          <div className="flex justify-between items-center mb-10 px-4">
-            <h1 className="text-left text-lg sm:text-3xl break-words">
+      <div className="m-auto flex h-full max-w-2xl flex-col items-center rounded-md bg-zinc-900">
+        <div className="mb-10 w-[800px] max-w-full px-3 py-10 text-center sm:px-10">
+          <div className="mb-10 flex items-center justify-between px-4">
+            <h1 className="break-words text-left text-lg sm:text-3xl">
               {item.title}
             </h1>
-            <h2 className="ml-4 text-lg sm:text-2xl min-w-fit mt-1 self-start text-zinc-400">
+            <h2 className="ml-4 mt-1 min-w-fit self-start text-lg text-zinc-400 sm:text-2xl">
               {item.price} €
             </h2>
           </div>
@@ -79,15 +79,15 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
             height={0}
             priority={true}
             placeholder="empty"
-            className="w-full h-auto object-contain"
+            className="h-auto w-full object-contain"
           />
-          <p className="text-left text-sm sm:text-base break-words mt-10 mx-auto px-4">
+          <p className="mx-auto mt-10 break-words px-4 text-left text-sm sm:text-base">
             {item.description}
           </p>
         </div>
 
         <div className="mt-auto">
-          <h3 className="text-center mb-5">
+          <h3 className="mb-5 text-center">
             Listed by:{" "}
             <Link
               href={`/users/${contactDetails.username}`}
@@ -96,7 +96,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
               {contactDetails.username}
             </Link>
           </h3>
-          <div className="flex flex-wrap justify-center gap-4 mb-10">
+          <div className="mb-10 flex flex-wrap justify-center gap-4">
             {contactDetails.email && (
               <Button
                 className="inline-block min-w-[220px]"
@@ -120,12 +120,12 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
         </div>
       </div>
       {isUsersListing && (
-        <div className="fixed w-full bottom-0 left-0 bg-zinc-900 bg-opacity-50">
+        <div className="fixed bottom-0 left-0 w-full bg-zinc-900 bg-opacity-50">
           <Button
             onClick={handleDelete}
             color="danger"
             loading={deleteLoading}
-            className="block mx-auto my-4"
+            className="mx-auto my-4 block"
           >
             Delete Listing
           </Button>
@@ -136,8 +136,6 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const helpers = getServerSideHelpers();
-
   const itemId = context.params?.id as string;
 
   if (typeof itemId !== "string") {
@@ -146,6 +144,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     };
   }
 
+  const helpers = getServerSideHelpers();
   await helpers.items.findById.prefetch({ itemId });
 
   return {

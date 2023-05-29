@@ -10,10 +10,10 @@ const FormInput = forwardRef<HTMLInputElement, Props>(({ ...props }, ref) => {
   return (
     <input
       {...props}
-      className={`py-2 px-3 w-full text-sm 
-           bg-slate-200 bg-opacity-5 
-           rounded-md text-slate-200 outline-none
-           border-[1px] border-transparent focus:border-slate-200
+      className={`w-full rounded-md border-[1px] border-transparent
+           bg-slate-200 bg-opacity-5
+           px-3 py-2 text-sm
+           text-slate-200 outline-none focus:border-slate-200
            ${props.className}
           `}
       ref={ref}

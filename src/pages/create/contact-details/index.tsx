@@ -108,11 +108,11 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
       <Head>
         <title>List new Item</title>
       </Head>
-      <h1 className="text-xl font-bold text-center mb-8">
+      <h1 className="mb-8 text-center text-xl font-bold">
         Add Contact Details
       </h1>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex gap-3 justify-center mb-8">
+        <div className="mb-8 flex justify-center gap-3">
           <div className="flex flex-col items-center gap-2">
             <FormLabel text="Email" />
             <input
@@ -143,7 +143,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
         {(selected === "email" || selected === "both") && (
           <FormField>
             <FormLabel text="Email (will not be displayed publicly)" />
-            <select className="bg-zinc-800 w-full p-2 " {...register("email")}>
+            <select className="w-full bg-zinc-800 p-2 " {...register("email")}>
               {emailAddresses.map((email) => (
                 <option key={email} value={email}>
                   {email}
@@ -167,9 +167,9 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
           </FormField>
         )}
 
-        <div className="flex items-center mt-10 justify-between">
+        <div className="mt-10 flex items-center justify-between">
           <Button onClick={handleGoBack} type="button" color="secondary">
-            <ArrowIcon className="w-6 h-6 text-zinc-300" />
+            <ArrowIcon className="h-6 w-6 text-zinc-300" />
           </Button>
           <Button type="submit" loading={loading}>
             SUBMIT

@@ -43,21 +43,21 @@ export default function Home() {
   );
 
   return (
-    <div className="flex flex-col items-center mb-20">
+    <div className="mb-20 flex flex-col items-center">
       <Head>
         <title>Marketplace</title>
       </Head>
-      <div className="mt-48 mb-48 max-w-full w-[500px] px-2">
-        <div className="relative flex flex-col sm:flex-row gap-3 flex-wrap sm:ml-14 select-none">
-          <h1 className="text-4xl text-center font-extrabold">Search For </h1>
+      <div className="mb-48 mt-48 w-[500px] max-w-full px-2">
+        <div className="relative flex select-none flex-col flex-wrap gap-3 sm:ml-14 sm:flex-row">
+          <h1 className="text-center text-4xl font-extrabold">Search For </h1>
           <TypeWriter words={words} />
         </div>
 
         <div className="relative mt-20">
-          <SearchIcon className="w-6 h-6 absolute top-2 left-2 text-slate-800" />
+          <SearchIcon className="absolute left-2 top-2 h-6 w-6 text-slate-800" />
           <input
             type="text"
-            className="px-12 py-2 w-full rounded-lg text-black"
+            className="w-full rounded-lg px-12 py-2 text-black"
             placeholder="Search items..."
             autoComplete="off"
             onKeyDown={(e) => {
@@ -72,12 +72,12 @@ export default function Home() {
       </div>
 
       <div className="w-[220px] sm:w-[420px] md:w-[640px] lg:w-[860px] xl:w-[1080px]">
-        <h1 className="font-bold text-2xl ml-2 mb-3">Categories</h1>
+        <h1 className="mb-3 ml-2 text-2xl font-bold">Categories</h1>
         <div className="mb-16">
           <Carousel id={1} slides={categoryCards} />
         </div>
 
-        <h1 className="font-bold text-2xl ml-2 mb-3">Newest listings</h1>
+        <h1 className="mb-3 ml-2 text-2xl font-bold">Newest listings</h1>
         <Carousel id={2} slides={itemCards} />
       </div>
     </div>

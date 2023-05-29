@@ -45,31 +45,31 @@ const EmailModal = ({
   if (!modalOpen) return <></>;
 
   return (
-    <div className="fixed w-screen h-screen top-0 left-0 bg-opacity-90 z-20 bg-black flex">
-      <FormContainer className="relative w-fit h-max max-w-full m-auto">
+    <div className="fixed left-0 top-0 z-20 flex h-screen w-screen bg-black bg-opacity-90">
+      <FormContainer className="relative m-auto h-max w-fit max-w-full">
         <div
           onClick={() => setModalOpen(false)}
-          className="absolute right-2 top-2 p-2 w-8 h-8 text-center text-xs font-extrabold bg-zinc-700 hover:bg-zinc-600 cursor-pointer rounded-full"
+          className="absolute right-2 top-2 h-8 w-8 cursor-pointer rounded-full bg-zinc-700 p-2 text-center text-xs font-extrabold hover:bg-zinc-600"
         >
           X
         </div>
         {session ? (
           <>
             <FormField>
-              <h1 className="text-2xl text-center mb-4">Send Email</h1>
+              <h1 className="mb-4 text-center text-2xl">Send Email</h1>
               <FormLabel text="Message" />
 
               <textarea
                 ref={messageRef}
-                className="w-full h-64 bg-zinc-800 text-slate-200 py-2 px-4"
+                className="h-64 w-full bg-zinc-800 px-4 py-2 text-slate-200"
               />
-              <p className="text-xs text-zinc-700 p-2">
+              <p className="p-2 text-xs text-zinc-700">
                 (Email will be sent to a dummy AWS address)
               </p>
             </FormField>
             <FormField>
               <Button
-                className="m-auto block mt-6"
+                className="m-auto mt-6 block"
                 onClick={handleSubmit}
                 loading={isLoading}
               >
@@ -78,7 +78,7 @@ const EmailModal = ({
             </FormField>
           </>
         ) : (
-          <div className="flex flex-col justify-center items-center gap-10 px-10 py-20 box-border">
+          <div className="box-border flex flex-col items-center justify-center gap-10 px-10 py-20">
             <h3 className="text-xl">You must be logged in to send emails</h3>
             <Button
               onClick={() => {

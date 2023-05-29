@@ -1,11 +1,11 @@
 const Loading = ({ className }: { className?: string }) => {
   return (
     <div
-      className={`h-full flex gap-2 justify-center items-center ${className}`}
+      className={`flex h-full items-center justify-center gap-2 ${className}`}
     >
-      <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full"></span>
-      <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full animation-delay-200"></span>
-      <span className="animate-loader h-5 w-5 bg-zinc-500 rounded-full animation-delay-400 "></span>
+      <span className="h-5 w-5 animate-loader rounded-full bg-zinc-500"></span>
+      <span className="animation-delay-200 h-5 w-5 animate-loader rounded-full bg-zinc-500"></span>
+      <span className="animation-delay-400 h-5 w-5 animate-loader rounded-full bg-zinc-500 "></span>
     </div>
   );
 };

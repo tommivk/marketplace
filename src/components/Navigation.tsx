@@ -17,24 +17,24 @@ const Navigation = () => {
   };
 
   return (
-    <div className="w-[calc(100vw-32px)] pl-8 py-10  h-14 flex items-center z-20">
+    <div className="z-20 flex h-14  w-[calc(100vw-32px)] items-center py-10 pl-8">
       <Link href={"/"}>
-        <h1 className="font-extrabold text-2xl tracking-wide text-slate-200">
+        <h1 className="text-2xl font-extrabold tracking-wide text-slate-200">
           MARKETPLACE
         </h1>
       </Link>
 
-      <div className="flex flex-col md:flex-row grow">
+      <div className="flex grow flex-col md:flex-row">
         <Burger menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
         <div
           className={`
                       ${menuOpen ? "" : "hidden md:flex"}
-                      absolute top-0 right-0 md:relative md:ml-auto flex-col md:flex-row flex grow items-center
-                      bg-zinc-900 md:bg-transparent rounded-sm p-8 md:p-0 select-none z-10
+                      absolute right-0 top-0 z-10 flex grow select-none flex-col items-center rounded-sm
+                      bg-zinc-900 p-8 md:relative md:ml-auto md:flex-row md:bg-transparent md:p-0
                     `}
         >
-          <div className="ml-0 md:ml-auto flex flex-col md:flex-row gap-3 md:gap-10 mt-10 md:mt-0 mb-6 md:mb-0">
+          <div className="mb-6 ml-0 mt-10 flex flex-col gap-3 md:mb-0 md:ml-auto md:mt-0 md:flex-row md:gap-10">
             <NavigationLink href="/search" text="Search" />
             {user && (
               <NavigationLink
@@ -67,7 +67,7 @@ const Navigation = () => {
 const NavigationLink = ({ href, text }: { href: string; text: string }) => {
   return (
     <Link href={href}>
-      <p className="font-bold hover:underline underline-offset-8 decoration-2 decoration-zinc-600">
+      <p className="font-bold decoration-zinc-600 decoration-2 underline-offset-8 hover:underline">
         {text}
       </p>
     </Link>
@@ -84,11 +84,11 @@ const Burger = ({
   return (
     <div
       onClick={() => setMenuOpen(!menuOpen)}
-      className="absolute right-10 top-7 space-y-2 cursor-pointer w-fit md:hidden z-20"
+      className="absolute right-10 top-7 z-20 w-fit cursor-pointer space-y-2 md:hidden"
     >
-      <div className="w-8 h-0.5 bg-zinc-400"></div>
-      <div className="w-8 h-0.5 bg-zinc-400"></div>
-      <div className="w-8 h-0.5 bg-zinc-400"></div>
+      <div className="h-0.5 w-8 bg-zinc-400"></div>
+      <div className="h-0.5 w-8 bg-zinc-400"></div>
+      <div className="h-0.5 w-8 bg-zinc-400"></div>
     </div>
   );
 };

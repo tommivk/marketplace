@@ -58,8 +58,8 @@ const TypeWriter = ({ words }: Props) => {
   return (
     <h1
       key={index}
-      className={`animate-typewriter w-0 text-transparent max-w-fit text-4xl text-center font-extrabold m-auto sm:ml-0
-                  bg-clip-text bg-gradient-to-r from-fuchsia-700 to-blue-400
+      className={`m-auto w-0 max-w-fit animate-typewriter bg-gradient-to-r from-fuchsia-700 to-blue-400 bg-clip-text text-center
+                  text-4xl font-extrabold text-transparent sm:ml-0
                 `}
     >
       {words[index]}

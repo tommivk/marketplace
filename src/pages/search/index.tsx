@@ -61,20 +61,20 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-2">
+    <div className="mx-auto max-w-2xl p-2">
       <Head>
         <title>Search</title>
       </Head>
       <div>
         <form>
-          <div className="flex flex-wrap items-center justify-center mt-20 mb-20 gap-2">
+          <div className="mb-20 mt-20 flex flex-wrap items-center justify-center gap-2">
             <div className="relative">
-              <SearchIcon className="w-6 h-6 absolute top-2.5 left-2 text-slate-200" />
+              <SearchIcon className="absolute left-2 top-2.5 h-6 w-6 text-slate-200" />
               <input
                 type="text"
                 ref={inputRef}
                 defaultValue={query}
-                className="px-11 py-3 w-[300px] rounded-lg bg-zinc-800 text-slate-200 text-sm"
+                className="w-[300px] rounded-lg bg-zinc-800 px-11 py-3 text-sm text-slate-200"
                 placeholder="Search items..."
                 autoComplete="off"
                 onKeyDown={(e) => {
@@ -90,7 +90,7 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
             <div className="flex gap-2">
               <select
                 ref={categoryRef}
-                className="block bg-zinc-800 text-slate-200 text-sm px-3 py-3 outline-none rounded-md"
+                className="block rounded-md bg-zinc-800 px-3 py-3 text-sm text-slate-200 outline-none"
                 defaultValue={c}
               >
                 <option value={""}>All categories</option>
@@ -130,7 +130,7 @@ const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
                   },
                 });
               }}
-              className="ml-auto mr-2 block bg-zinc-800 text-slate-200 text-sm px-5 py-2 outline-none rounded-md"
+              className="ml-auto mr-2 block rounded-md bg-zinc-800 px-5 py-2 text-sm text-slate-200 outline-none"
             >
               <option value={"1"}>Newest first</option>
               <option value={"2"}>Oldest first</option>
@@ -178,7 +178,7 @@ const Pagination = ({
   const pages = Math.ceil(searchCount / LIMIT);
 
   return (
-    <div className="flex justify-between items-center mt-4 mb-10">
+    <div className="mb-10 mt-4 flex items-center justify-between">
       <Button
         color="secondary"
         className="disabled:opacity-0"
@@ -229,10 +229,10 @@ type Item = RouterOutput["items"]["search"]["items"][number];
 
 const ItemList = ({ items }: { items?: Item[] }) => {
   if (items?.length === 0) {
-    return <p className="text-center mt-40">No items found</p>;
+    return <p className="mt-40 text-center">No items found</p>;
   }
   return (
-    <ul className="max-w-2xl p-2 m-auto">
+    <ul className="m-auto max-w-2xl p-2">
       {items?.map(
         ({
           id,
@@ -242,7 +242,7 @@ const ItemList = ({ items }: { items?: Item[] }) => {
           category: { name: category },
           image: { imageURL },
         }) => (
-          <li key={id} className="my-2 rounded-lg group">
+          <li key={id} className="group my-2 rounded-lg">
             <Divider />
             <Link href={`/items/${id} `}>
               <div className="flex w-full">
@@ -264,13 +264,13 @@ const ItemList = ({ items }: { items?: Item[] }) => {
 
 const ItemImage = ({ imageURL }: { imageURL: string }) => {
   return (
-    <div className="min-w-max relative overflow-hidden rounded-lg">
+    <div className="relative min-w-max overflow-hidden rounded-lg">
       <Image
         src={imageURL}
         height={150}
         width={150}
         alt={"item"}
-        className="object-cover rounded-lg group-hover:scale-[103%] duration-300 aspect-square"
+        className="aspect-square rounded-lg object-cover duration-300 group-hover:scale-[103%]"
       />
     </div>
   );
@@ -292,11 +292,11 @@ const ItemContent = ({
   category: string;
 }) => {
   return (
-    <div className="px-2 ml-2 flex flex-col">
-      <h1 className="text-lg break-all">{title}</h1>
+    <div className="ml-2 flex flex-col px-2">
+      <h1 className="break-all text-lg">{title}</h1>
       <p className="text-2xl">{price} €</p>
       <p className="text-zinc-300">{category}</p>
-      <p className="mt-auto mb-2 text-xs text-zinc-500">
+      <p className="mb-2 mt-auto text-xs text-zinc-500">
         {dayjs().to(createdAt)}
       </p>
     </div>

@@ -31,7 +31,7 @@ const FinalizeUser: NextPage = () => {
 
   return (
     <FormContainer>
-      <h1 className="text-center font-bold text-2xl mb-10">
+      <h1 className="mb-10 text-center text-2xl font-bold">
         Choose a Username
       </h1>
       <FormField>
@@ -45,7 +45,7 @@ const FinalizeUser: NextPage = () => {
           }}
         ></Input>
         <Button
-          className="m-auto block mt-10"
+          className="m-auto mt-10 block"
           onClick={handleSubmit}
           loading={isLoading}
         >

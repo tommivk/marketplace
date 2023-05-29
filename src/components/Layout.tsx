@@ -25,7 +25,7 @@ export default function Layout({ children }: PropsWithChildren) {
   const isLoading = user === undefined;
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex h-full flex-col">
       <Navigation key={router.pathname} />
       {isLoading || redirectToFinalize ? (
         <Loading />

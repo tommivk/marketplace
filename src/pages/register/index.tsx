@@ -3,7 +3,7 @@ import Head from "next/head";
 
 const SignUpPage = () => {
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="flex h-full items-center justify-center">
       <Head>
         <title>Sign up</title>
       </Head>

@@ -50,9 +50,9 @@ const ItemForm = () => {
       <Head>
         <title>List new Item</title>
       </Head>
-      <h1 className="text-xl font-bold text-center mb-8">List New Item</h1>
+      <h1 className="mb-8 text-center text-xl font-bold">List New Item</h1>
       <form
-        className="flex flex-col gap-2 justify-center"
+        className="flex flex-col justify-center gap-2"
         onSubmit={handleSubmit(onSubmit)}
       >
         <FormField>
@@ -105,14 +105,14 @@ const ItemForm = () => {
           <FormLabel text="Description" />
           <textarea
             {...register("description")}
-            className="bg-zinc-800 w-full h-40 p-2 text-sm rounded-md"
+            className="h-40 w-full rounded-md bg-zinc-800 p-2 text-sm"
             placeholder="Description"
             autoComplete="off"
           />
           <ErrorMessage error={errors.description} />
         </FormField>
 
-        <Button className="mt-4 ml-auto" type="submit">
+        <Button className="ml-auto mt-4" type="submit">
           NEXT
         </Button>
       </form>
