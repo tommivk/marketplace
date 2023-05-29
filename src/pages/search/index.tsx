@@ -6,12 +6,15 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "@/server/root";
+import { AppRouter, appRouter } from "@/server/root";
 import { FormEvent, useRef } from "react";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import SearchIcon from "@/components/SearchIcon";
 import Head from "next/head";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import superjson from "superjson";
+import { prisma } from "@/server/db";
 
 dayjs.extend(relativeTime);
 
@@ -25,7 +28,10 @@ type Props = {
 };
 
 const SearchPage: NextPage<Props> = ({ query, orderBy, c, page }) => {
-  const { data: categories } = trpc.categories.getAll.useQuery();
+  const { data: categories } = trpc.categories.getAll.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
+
   const { data, isLoading } = trpc.items.search.useQuery({
     query,
     orderBy,
@@ -301,8 +307,23 @@ const ItemContent = ({
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { query = "", orderBy = "1", c = "", page = 1 } = ctx.query;
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: { prisma, userId: null },
+    transformer: superjson,
+  });
+
+  await helpers.categories.getAll.prefetch();
+
   return {
-    props: { query, orderBy, c, page: Number(page) },
+    props: {
+      query,
+      orderBy,
+      c,
+      page: Number(page),
+      trpcState: helpers.dehydrate(),
+    },
   };
 };
 
