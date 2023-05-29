@@ -1,8 +1,4 @@
 import { GetStaticProps, NextPage } from "next";
-import { appRouter } from "@/server/root";
-import { prisma } from "@/server/db";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import superjson from "superjson";
 import { trpc } from "@/utils/trpc";
 import Image from "next/image";
 import Button from "@/components/Button";
@@ -13,6 +9,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { useClerk } from "@clerk/nextjs";
 import Head from "next/head";
+import { getServerSideHelpers } from "@/server/utils";
 
 type Props = {
   itemId: string;
@@ -139,11 +136,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
+  const helpers = getServerSideHelpers();
 
   const itemId = context.params?.id as string;
 

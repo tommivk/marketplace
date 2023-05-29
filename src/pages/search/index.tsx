@@ -12,9 +12,7 @@ import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import SearchIcon from "@/components/SearchIcon";
 import Head from "next/head";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import superjson from "superjson";
-import { prisma } from "@/server/db";
+import { getServerSideHelpers } from "@/server/utils";
 
 dayjs.extend(relativeTime);
 
@@ -308,12 +306,7 @@ const ItemContent = ({
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { query = "", orderBy = "1", c = "", page = 1 } = ctx.query;
 
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
-
+  const helpers = getServerSideHelpers();
   await helpers.categories.getAll.prefetch();
 
   return {

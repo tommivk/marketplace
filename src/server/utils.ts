@@ -1,4 +1,8 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { appRouter } from "./root";
+import { prisma } from "./db";
+import superjson from "superjson";
 
 export const getUsersVerifiedEmailAddresses = async (userId: string) => {
   const user = await clerkClient.users.getUser(userId);
@@ -16,3 +20,10 @@ export const getUserByUserName = async (username: string) => {
   });
   return userList[0];
 };
+
+export const getServerSideHelpers = () =>
+  createServerSideHelpers({
+    router: appRouter,
+    ctx: { prisma, userId: null },
+    transformer: superjson,
+  });

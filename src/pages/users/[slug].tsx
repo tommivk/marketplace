@@ -1,11 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
-import { appRouter } from "@/server/root";
-import { prisma } from "@/server/db";
-import { createServerSideHelpers } from "@trpc/react-query/server";
 import { trpc } from "@/utils/trpc";
-import { getUserByUserName } from "@/server/utils";
+import { getServerSideHelpers, getUserByUserName } from "@/server/utils";
 import { useClerk } from "@clerk/nextjs";
-import superjson from "superjson";
 import ImageCard from "@/components/ImageCard";
 import Head from "next/head";
 
@@ -73,12 +69,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const userId = user.id;
 
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
-
+  const helpers = getServerSideHelpers();
   await helpers.items.getItemsByUser.prefetch({ userId });
 
   return {

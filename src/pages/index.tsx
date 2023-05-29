@@ -3,15 +3,12 @@ import CategoryCard from "@/components/CategoryCard";
 import { trpc } from "@/utils/trpc";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { appRouter } from "@/server/root";
-import { prisma } from "@/server/db";
-import superjson from "superjson";
 import Carousel from "@/components/Carousel";
 import ImageCard from "@/components/ImageCard";
 import TypeWriter from "@/components/TypeWriter";
 import SearchIcon from "@/components/SearchIcon";
 import Head from "next/head";
+import { getServerSideHelpers } from "@/server/utils";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
@@ -88,12 +85,7 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson,
-  });
-
+  const helpers = getServerSideHelpers();
   await helpers.categories.getAll.prefetch();
   await helpers.items.getNewest.prefetch();
 
