@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter, appRouter } from "@/server/root";
+import { AppRouter } from "@/server/root";
 import { FormEvent, useRef } from "react";
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
