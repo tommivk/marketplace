@@ -1,6 +1,8 @@
 import { User } from "@clerk/nextjs/dist/api";
 import { getUsersVerifiedEmailAddresses } from "../utils";
 
+jest.mock("@upstash/ratelimit");
+
 const user = {
   id: "123",
   username: "Test user",
