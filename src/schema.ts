@@ -38,3 +38,8 @@ export const contactDetailsSchema = z
   .refine((data) => !!data.email || !!data.phoneNumber, {
     message: "Phone number or email is required",
   });
+
+export const locationDataSchema = z.object({
+  coordinates: z.object({ lat: z.number().min(0), lng: z.number().min(0) }),
+  locationString: z.string({ required_error: "Location is required" }),
+});

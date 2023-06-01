@@ -140,7 +140,7 @@ export const itemsRouter = router({
     .query(async ({ ctx, input }) => {
       const item = await ctx.prisma.item.findUnique({
         where: { id: input.itemId },
-        include: { image: true, contactDetails: true },
+        include: { image: true, contactDetails: true, location: true },
       });
       if (!item) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -170,11 +170,12 @@ export const itemsRouter = router({
         fileName: z.string().min(1),
         email: z.string().email().optional(),
         phoneNumber: z.string().min(1).optional(),
+        coordinates: z.object({ lat: z.number(), lng: z.number() }),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx;
-      const { fileName, email, phoneNumber } = input;
+      const { fileName, email, phoneNumber, coordinates } = input;
 
       if (!email && !phoneNumber)
         throw new TRPCError({
@@ -214,6 +215,10 @@ export const itemsRouter = router({
         },
       });
 
+      const { id: locationId } = await ctx.prisma.location.create({
+        data: coordinates,
+      });
+
       const item = await ctx.prisma.item.create({
         data: {
           authorId: userId,
@@ -223,6 +228,7 @@ export const itemsRouter = router({
           price: input.price,
           imageId,
           contactDetailsId,
+          locationId,
         },
       });
 

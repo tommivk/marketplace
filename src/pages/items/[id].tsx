@@ -1,21 +1,26 @@
 import { GetStaticProps, NextPage } from "next";
 import { trpc } from "@/utils/trpc";
+import { locationDataSchema } from "@/schema";
+import { z } from "zod";
+import { useRouter } from "next/router";
+import { useClerk } from "@clerk/nextjs";
+import { useState } from "react";
+import { getServerSideHelpers } from "@/server/utils";
 import Image from "next/image";
 import Button from "@/components/Button";
-import { useState } from "react";
 import EmailModal from "@/components/EmailModal";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { useClerk } from "@clerk/nextjs";
 import Head from "next/head";
-import { getServerSideHelpers } from "@/server/utils";
+import React from "react";
+import Map from "@/components/Map";
 
 type Props = {
   itemId: string;
 };
 
 const ItemPage: NextPage<Props> = ({ itemId }) => {
+  const [locationString, setLocationString] = useState("");
   const [showNumber, setShowNumber] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -50,8 +55,14 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
     }
   };
 
+  type LocationData = z.infer<typeof locationDataSchema>;
+
+  const handleLocationChange = ({ locationString }: LocationData) => {
+    setLocationString(locationString);
+  };
+
   return (
-    <div className="my-10 px-4 pb-20 sm:my-20">
+    <div className="my-10 flex flex-wrap justify-center gap-5 px-4 pb-20 sm:my-20">
       <EmailModal
         itemId={itemId}
         modalOpen={modalOpen}
@@ -62,7 +73,7 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
         <title>{item.title}</title>
       </Head>
 
-      <div className="m-auto flex h-full max-w-2xl flex-col items-center rounded-md bg-zinc-900">
+      <div className="mx-20 flex h-full w-[700px] max-w-full flex-col items-center rounded-md bg-zinc-900">
         <div className="mb-10 w-[800px] max-w-full px-3 py-10 text-center sm:px-10">
           <div className="mb-10 flex items-center justify-between px-4">
             <h1 className="break-words text-left text-lg sm:text-3xl">
@@ -129,6 +140,19 @@ const ItemPage: NextPage<Props> = ({ itemId }) => {
           >
             Delete Listing
           </Button>
+        </div>
+      )}
+      {item.location && (
+        <div className="h-fit max-w-full rounded-lg bg-zinc-900 p-5">
+          <h1 className="mb-5 text-center text-xl">Item Location</h1>
+          <Map
+            height={450}
+            width={370}
+            lat={item.location.lat}
+            lng={item.location.lng}
+            onLocationChange={handleLocationChange}
+          />
+          <p className="mt-5 text-center">{locationString}</p>
         </div>
       )}
     </div>

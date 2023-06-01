@@ -26,6 +26,15 @@ model Item {
   price            Int
   contactDetails   ContactDetails @relation(fields: [contactDetailsId], references: [id])
   contactDetailsId String
+  location         Location? @relation(fields: [locationId], references: [id])
+  locationId       String?
+}
+
+model Location {
+  id          String   @id @default(cuid())
+  lat         Float
+  lng         Float
+  item        Item[]
 }
 
 model ContactDetails {

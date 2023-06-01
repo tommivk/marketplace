@@ -109,6 +109,7 @@ describe("Item tests", () => {
         price: 1,
         title: "",
         email: "",
+        coordinates: { lat: 20, lng: 20 },
       })
     ).rejects.toThrow(new TRPCError({ code: "UNAUTHORIZED" }));
 
@@ -147,6 +148,7 @@ describe("Item tests", () => {
       price: 20,
       title: "Test item",
       fileName: "file",
+      coordinates: { lat: 20, lng: 20 },
     };
     await expect(callerWithUserId.items.create(input)).rejects.toThrow(
       new TRPCError({

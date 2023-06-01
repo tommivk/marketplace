@@ -27,7 +27,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
   const router = useRouter();
 
   const formStore = useFormStore();
-  if (!formStore.itemDetails) {
+  if (!formStore.itemDetails || !formStore.locationData) {
     router.push("/create");
   }
 
@@ -76,11 +76,20 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
       console.log("ITEM: ", itemDetails);
       if (!itemDetails) throw "Itemdetails data was undefined";
 
+      const locationData = formStore.locationData?.coordinates;
+      const lat = Number(locationData?.lat);
+      const lng = Number(locationData?.lng);
+      const coordinates = { lat, lng };
       const file = z.instanceof(File).parse(itemDetails.imageFile);
       const fileName = await uploadImage(file);
 
       delete itemDetails["imageFile"];
-      createItem({ ...itemDetails, ...contactDetails, fileName });
+      createItem({
+        ...itemDetails,
+        ...contactDetails,
+        coordinates,
+        fileName,
+      });
     } catch (e: any) {
       toast.error(e?.message ?? "Failed to create item");
     } finally {
@@ -91,7 +100,7 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = ({
   const handleGoBack = () => {
     const data = getValues();
     formStore.setData({ step: "contactDetails", data });
-    router.push("/create");
+    router.push("/create/location");
   };
 
   const handleRadioChange = (value: "email" | "phone" | "both") => {

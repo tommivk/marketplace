@@ -38,7 +38,7 @@ const ItemForm = () => {
 
   const onSubmit: SubmitHandler<ItemSchemaWithFile> = async (data) => {
     formStore.setData({ step: "itemDetails", data });
-    router.push("/create/contact-details");
+    router.push("/create/location");
   };
 
   if (isLoading) {
