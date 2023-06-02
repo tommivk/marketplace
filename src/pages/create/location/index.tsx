@@ -52,6 +52,8 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = () => {
     setValue("locationString", locationData.locationString);
   };
 
+  const { lat, lng } = formStore.locationData?.coordinates ?? {};
+
   return (
     <FormContainer>
       <Head>
@@ -66,8 +68,8 @@ const ContactDetailsPage: NextPage<{ emailAddresses: string[] }> = () => {
         <Map
           height={500}
           width={400}
-          lat={60.17}
-          lng={24.94}
+          lat={lat ?? 60.17}
+          lng={lng ?? 24.94}
           zoom={5}
           selectable
           onLocationChange={handleLocationChange}
