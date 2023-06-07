@@ -18,21 +18,30 @@ export default function Home() {
 
   const router = useRouter();
 
-  const itemCards = newestItems?.map(
-    ({ id, title, description, price, image: { imageURL } }) => (
-      <ImageCard
-        key={id}
-        link={`/items/${id}`}
-        imageURL={imageURL}
-        title={title}
-        content={description}
-        price={price}
-      />
-    )
+  const itemCards = useMemo(
+    () =>
+      newestItems?.map(
+        ({ id, title, description, price, image: { imageURL } }) => (
+          <ImageCard
+            key={id}
+            link={`/items/${id}`}
+            imageURL={imageURL}
+            title={title}
+            content={description}
+            price={price}
+          />
+        )
+      ),
+    [newestItems]
   );
-  const categoryCards = categories?.map((category) => (
-    <CategoryCard category={category} key={category.id} />
-  ));
+
+  const categoryCards = useMemo(
+    () =>
+      categories?.map((category) => (
+        <CategoryCard category={category} key={category.id} />
+      )),
+    [categories]
+  );
 
   const words = useMemo(
     () =>
