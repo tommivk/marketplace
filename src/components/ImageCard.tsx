@@ -5,7 +5,7 @@ type Props = {
   link: string;
   imageURL: string;
   price?: number;
-  content: string;
+  content: React.ReactNode;
   title: string;
 };
 
