@@ -22,7 +22,7 @@ const CategoryCard = ({ category }: Props) => {
       imageURL={category.imageURL}
       content={
         isLoading ? (
-          <Loading size="sm" className="mt-2"></Loading>
+          <Loading size="sm" className="ml-1 mt-2 w-fit"></Loading>
         ) : (
           `${itemCount} Items`
         )
