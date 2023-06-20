@@ -12,9 +12,7 @@ import { getServerSideHelpers } from "@/server/utils";
 
 export default function Home() {
   const { data: newestItems } = trpc.items.getNewest.useQuery();
-  const { data: categories } = trpc.categories.getAll.useQuery(undefined, {
-    refetchOnWindowFocus: false,
-  });
+  const { data: categories } = trpc.categories.getAllWithItemCount.useQuery();
 
   const router = useRouter();
 
@@ -95,7 +93,7 @@ export default function Home() {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const helpers = getServerSideHelpers();
-  await helpers.categories.getAll.prefetch();
+  await helpers.categories.getAllWithItemCount.prefetch();
   await helpers.items.getNewest.prefetch();
 
   return {
